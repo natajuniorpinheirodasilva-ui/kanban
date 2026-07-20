@@ -19,7 +19,7 @@ export default function Home() {
         </h1>
 
         <button
-        className="bg-amber-100 p-4 rounded-4xl hover:bg-gray-50 cursor-pointer w-30"
+        className="bg-emerald-800 text-white p-2 mt-2 rounded-4xl hover:bg-blue-600 cursor-pointer w-30"
         onClick={ () => setNewTask(true) }>
           Nova Tarefa
         </button>
@@ -45,7 +45,7 @@ export default function Home() {
         className="bg-gray-50 p-2 border rounded"
         value={priority}
         onChange={ (e) => setPriority(e.target.value) }>
-          <option disabled selected>Selecione uma Prioridade</option>
+          <option disabled selected>Selecione a Prioridade</option>
           <option value="baixa">Baixa</option>
           <option value="media">Média</option>
           <option value="alta">Alta</option>
@@ -61,6 +61,11 @@ export default function Home() {
           <option value="andamento">Em Andamento</option>
           <option value="concluido">Concluído</option>
         </select>
+        <button
+        className="bg-emerald-800 text-white p-1 mt-2 rounded-4xl hover:bg-blue-600 cursor-pointer"
+        onClick={ () => setNewTask(false)}>
+          Cancelar Tarefa
+        </button>
       </form>
       }
 
