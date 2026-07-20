@@ -11,3 +11,30 @@ generator client {
 datasource db {
   provider = "sqlite"
 }
+
+model Board {
+  id    String @id @default(cuid())
+  title String
+
+  columns Column[]
+}
+
+model Column {
+  id       String @id @default(cuid())
+  title    String
+  position Int
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id])
+
+  cards Card[]
+}
+
+model Card {
+  id       String @id @default(cuid())
+  title    String
+  position Int
+
+  columnId String
+  column   Column @relation(fields: [columnId], references: [id])
+}
