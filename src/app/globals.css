@@ -19,3 +19,24 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Georgia, 'Times New Roman', serif;
 }
+
+#drag-item {
+  width: 100px;
+  height: 100px;
+  background-color: #3498db;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: move;
+}
+
+#drop-zone {
+  width: 200px;
+  height: 200px;
+  border: 2px dashed #ccc;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

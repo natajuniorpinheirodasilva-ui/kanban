@@ -5,7 +5,7 @@ type Task = {
   id: string;
   title: string;
   description: string;
-  status: string;
+  columnId: string;
   priority: string;
 }
 
@@ -18,7 +18,7 @@ export default function Home() {
   
   const [tasks, setTasks] = useState<Task[]>([])
 
-  const handleSubmit = (e: React.SubmitEvent<) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const newTask: Task = {
@@ -89,10 +89,13 @@ export default function Home() {
           value={status}
           onChange={ (e) => setStatus(e.target.value) }>
 
-          <option disabled>Selecione a Categoria</option>
-          <option value="fazer">A Fazer</option>
-          <option value="andamento">Em Andamento</option>
-          <option value="concluido">Concluído</option>
+          {columns.map(column => (
+          <option
+            key={column.id}
+            value={column.id}>
+            {column.title}
+          </option>
+        ))}
 
         </select>
         <button
