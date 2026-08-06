@@ -6,5 +6,9 @@ export default async function Home() {
 
   const board = await prisma.board.findFirst({ include: boardInclude })
 
-  return
+  if (!board) { return <h1>No board found.</h1> }
+
+  return (
+    <Kanban board={board}/>
+  )
 }
