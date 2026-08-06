@@ -20,19 +20,19 @@ async function main() {
             title: "Exemplo",
             columns: {
                 create: [
-                    {title: "A Fazer", position: 100, cards: {
+                    {title: "To Do", position: 100, cards: {
                         create: [
-                            {title: "A Fazer 1", position: 100}
+                            {title: "To Do Card", position: 100}
                         ]
                     } },
-                    {title: "Em Andamento", position: 200, cards: { 
+                    {title: "In Progress", position: 200, cards: { 
                         create: [
-                            {title: "Em Andamento 1", position: 200}
+                            {title: "In Progress Card", position: 200}
                         ] 
                     } },
-                    {title: "Concluído", position: 300, cards: {
+                    {title: "Done", position: 300, cards: {
                         create: [
-                            {title: "Concluído 1", position: 300}
+                            {title: "Done Card", position: 300}
                         ] 
                     } },
                 ]
