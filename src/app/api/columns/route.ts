@@ -4,7 +4,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { title, boardId } = body
 
-    if(!title || title.trim().length() === 0) {
+    if(!title || title.trim().length === 0) {
         return Response.json({ error: "Invalid Title." }, { status: 400 } )
     }
     if(boardId.length === 0) {
