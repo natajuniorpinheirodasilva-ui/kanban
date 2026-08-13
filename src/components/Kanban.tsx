@@ -21,7 +21,7 @@ return(
     <div className="flex justify-center" >
         <div className="flex gap-5">
         
-        <NewCardForm columns={board.columns} onCreate={handleCardCreate} />
+        <NewCardForm columns={board.columns} onCreate={handleCardCreate}/>
         
         {board.columns.map((column) => (
             <div className="flex flex-col w-72 gap-3 text" key={column.id}>

@@ -40,3 +40,20 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+@keyframes errorAnimation {
+  0%, 100% { transform: translateX(0); color: #ef4444; }
+  10% { transform: translateX(-6px); }
+  20% { transform: translateX(6px); }
+  30% { transform: translateX(-6px); }
+  40% { transform: translateX(0); color: #450a0a; }
+
+  70% { color: #ef4444; }
+
+  100% { color:black }
+}
+
+.animate-error {
+  animation: errorAnimation 0.8s ease-out;
+  display: inline-block;
+}

@@ -5,7 +5,8 @@ import { Column, Card } from "@/generated/prisma/client"
 
 type Props = {
     columns: Column[];
-    onCreate: (card: Card) => void
+    onCreate: (card: Card) => void;
+    className?: string;
 }
 
 const NewCardForm = ({ columns, onCreate }: Props) => {
@@ -17,6 +18,7 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
     const [columnIdError, setColumnIdError] = useState<boolean>(false)
 
     const [apiError, setApiError] = useState<boolean>(false)
+    const [errorTrigger, setErrorTrigger] = useState<number>(0)
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -28,6 +30,7 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
         setColumnIdError(hasColumnIdError)
 
         if (hasColumnIdError || hasTitleError ) {
+            setErrorTrigger(prev => prev + 1)
             return
         }
         try {
@@ -38,6 +41,7 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
             })
             if(!response.ok) {
                 setApiError(true)
+                setErrorTrigger(prev => prev + 1)
                 return
             }
             
@@ -46,15 +50,17 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
             onCreate(newCard)
             setColumnId('')
             setTitle('')
+            setApiError(false)
 
         } catch(error) {
             setApiError(true)
+            setErrorTrigger(prev => prev + 1)
         }
     }
 
     return (
     <form
-    className="flex flex-col w-72 gap-2 bg-white/5 border border-black/20 rounded-xl p-4 shadow"
+    className="flex flex-col w-72 h-auto self-start gap-2 bg-white/5 border border-black/20 rounded-xl p-4 shadow-sm"
     onSubmit={handleSubmit} >
         <input
         className="border border-black/20 rounded p-2"
@@ -83,9 +89,29 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
             Submit
         </button>
 
-        { apiError && <p>API Error, try again later.</p>}
-        { columnIdError && <p>Column Id error.</p> }
-        { titleError && <p>Title error.</p> }
+        { apiError && 
+            <p
+            key={`api-${errorTrigger}`}
+            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1">
+                API Error, try again later.
+            </p>
+        }
+        
+        { columnIdError && 
+            <p
+            key={`column-${errorTrigger}`}
+            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1">
+                Column Id error.
+            </p>
+        }
+        
+        { titleError && 
+            <p
+            key={`title-${errorTrigger}`}
+            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1">
+                Title error.
+            </p>
+        }
     </form>
   )
 }
