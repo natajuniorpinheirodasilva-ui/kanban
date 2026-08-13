@@ -3,10 +3,13 @@ import { PrismaClient } from "../../src/generated/prisma/client"
 
 process.loadEnvFile()
 
-const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL!,
-});
+const databaseUrl = process.env.DATABASE_URL
+if(!databaseUrl) {
+  throw new Error("DATABASE_URL is not defined.")
+}
 
-export const prisma = new PrismaClient({
-  adapter,
-});
+const adapter = new PrismaBetterSqlite3({
+  url: databaseUrl
+})
+
+export const prisma = new PrismaClient
