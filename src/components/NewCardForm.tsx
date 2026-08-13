@@ -19,6 +19,8 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
 
     const [apiError, setApiError] = useState<boolean>(false)
     const [errorTrigger, setErrorTrigger] = useState<number>(0)
+    
+    const errorClass = "border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 pt-1 leading-3.5"
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -92,7 +94,7 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
         { apiError && 
             <p
             key={`api-${errorTrigger}`}
-            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1">
+            className={errorClass}>
                 API Error, try again later.
             </p>
         }
@@ -100,7 +102,7 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
         { columnIdError && 
             <p
             key={`column-${errorTrigger}`}
-            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1">
+            className={errorClass}>
                 Column Id error.
             </p>
         }
@@ -108,7 +110,7 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
         { titleError && 
             <p
             key={`title-${errorTrigger}`}
-            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1">
+            className={errorClass}>
                 Title error.
             </p>
         }

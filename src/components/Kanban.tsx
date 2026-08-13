@@ -1,8 +1,9 @@
 'use client'
 
-import { Card } from "@/generated/prisma/client";
+import { Card, Column } from "@/generated/prisma/client";
 import { BoardWithColumnsAndCards } from "@/lib/board";
-import NewCardForm from "@/components/NewCardForm"
+import NewCardForm from "@/components/NewCardForm";
+import NewColumnForm from "./NewColumnForm";
 import { useState } from "react";
 
 type Props = {
@@ -12,9 +13,14 @@ type Props = {
 function Kanban ({ board }: Props) {
 
     const [cards, setCards] = useState<Card[]>(board.columns.flatMap( (column) => column.cards) )
-
+    const [columns, setColumns] = useState<Column[]>(board.columns)
+    
     function handleCardCreate(newCard: Card) {
         setCards([...cards, newCard])
+    }
+
+    function handleColumnCreate(newColumn: Column) {
+        setColumns([...columns, newColumn])
     }
 
 return(    
@@ -22,8 +28,9 @@ return(
         <div className="flex gap-5">
         
         <NewCardForm columns={board.columns} onCreate={handleCardCreate}/>
+        <NewColumnForm boardId={board.id} onCreate={handleColumnCreate} />
         
-        {board.columns.map((column) => (
+        {columns.map((column) => (
             <div className="flex flex-col w-72 gap-3 text" key={column.id}>
             <h2 className="text-base font-semibold text-black/70 uppercase tracking-wide rounded border-b pb-1 shadow">
                 {column.title}
