@@ -20,7 +20,7 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
-
+        
         const hasTitleError = title === ""
         const hasColumnIdError = columnId === ""
 
@@ -53,13 +53,18 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
     }
 
     return (
-    <form onSubmit={handleSubmit} >
+    <form
+    className="flex flex-col w-72 gap-2 bg-white/5 border border-black/20 rounded-xl p-4 shadow"
+    onSubmit={handleSubmit} >
         <input
+        className="border border-black/20 rounded p-2"
+        placeholder="Card title"
         value={title}
         type="text"
         onChange={ (e) => setTitle(e.target.value) }/>
         
         <select
+         className="border border-black/20 rounded p-2"
          value={columnId}
          onChange={ (e) => setColumnId(e.target.value) }>
             <option value="" disabled>Select a column</option>
@@ -72,7 +77,11 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
             ))}
         </select>
 
-        <button type="submit">Submit</button>
+        <button
+        className="bg-black/80 text-white rounded p-2 hover:bg-black/70 cursor-pointer"
+        type="submit">
+            Submit
+        </button>
 
         { apiError && <p>API Error, try again later.</p>}
         { columnIdError && <p>Column Id error.</p> }
