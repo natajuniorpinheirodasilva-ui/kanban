@@ -19,6 +19,7 @@ function Kanban ({ board }: Props) {
     const [newColumnButton, setNewColumnButton] = useState<boolean>(false)
 
     const [columnDeleteError, setColumnDeleteError] = useState<boolean>(false)
+    const [cardDeleteError ,setCardDeleteError] = useState<boolean>(false)
     
     function handleCardCreate(newCard: Card) {
         setCards([...cards, newCard])
@@ -52,6 +53,27 @@ function Kanban ({ board }: Props) {
         }
     }
 
+    async function handleCardDelete(cardId: string) {
+        if(!window.confirm("Delete this card?")) {
+            return
+        }
+        
+        try {
+            const response = await fetch(`/api/cards/${cardId}`, {
+                method: "DELETE",
+            })
+            if(!response.ok) {
+                setCardDeleteError(true)
+                return
+            }
+
+            setCards(cards.filter((card) => card.id !== cardId))
+
+        } catch (error) {
+            setCardDeleteError(true)
+        }
+    }
+
 return (    
     <div className="flex gap-5 p-6 overflow-x-auto items-start justify-start min-h-screen bg-gray-50/50" >
         
@@ -60,7 +82,7 @@ return (
                 <h2 className="flex items-center justify-between text-base font-semibold text-black/70 uppercase tracking-wide border-b pb-1">
                     <span>{column.title}</span>
                     <button
-                        className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-black/5 hover:rounded "
+                        className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-black/5 hover:rounded"
                         onClick={() => handleColumnDelete(column.id)}>
                             Delete Column
                     </button>
@@ -68,12 +90,17 @@ return (
 
                 
                 {cards
-                 .filter( (card) => card.columnId === column.id )
-                 .map((card) => (
+                .filter( (card) => card.columnId === column.id )
+                .map((card) => (
                     <div
                         key={card.id}
-                        className="bg-white border border-black/10 rounded-xl p-4 text-black shadow-sm">
-                        {card.title}
+                        className="flex items-center justify-between bg-white border border-black/10 rounded-xl p-4 text-black shadow-sm">
+                        <span>{card.title}</span>
+                        <button
+                        className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-black/5 hover:rounded p-1"
+                        onClick={() => handleCardDelete(card.id)}>
+                            Delete
+                        </button>
                     </div>
                 ))}
 
