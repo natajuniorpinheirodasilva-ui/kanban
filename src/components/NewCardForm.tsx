@@ -23,7 +23,7 @@ const NewCardForm = ({ columns, initialColumnId = '', onCreate, onCancel }: Prop
     
     const errorClass = "border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 pt-1 leading-3.5"
 
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
         
         const hasTitleError = title === ""
@@ -72,9 +72,9 @@ const NewCardForm = ({ columns, initialColumnId = '', onCreate, onCancel }: Prop
         onChange={ (e) => setTitle(e.target.value) }/>
         
         <select
-         className="border border-black/20 rounded p-2"
-         value={columnId}
-         onChange={ (e) => setColumnId(e.target.value) }>
+        className="border border-black/20 rounded p-2"
+        value={columnId}
+        onChange={ (e) => setColumnId(e.target.value) }>
             <option value="" disabled>Select a column</option>
             {columns.map( (column) => (
                 <option

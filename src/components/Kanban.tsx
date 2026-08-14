@@ -17,6 +17,8 @@ function Kanban ({ board }: Props) {
     
     const [activeColumnForCard, setActiveColumnForCard] = useState<null | string>(null)
     const [newColumnButton, setNewColumnButton] = useState<boolean>(false)
+
+    const [columnDeleteError, setColumnDeleteError] = useState<boolean>(false)
     
     function handleCardCreate(newCard: Card) {
         setCards([...cards, newCard])
@@ -28,14 +30,42 @@ function Kanban ({ board }: Props) {
         setNewColumnButton(false)
     }
 
+    async function handleColumnDelete(columnId: string) {
+        if (!window.confirm("Delete this column and all its cards?")) {
+            return
+        }
+
+        try {
+            const response = await fetch(`/api/columns/${columnId}`, {
+                method: "DELETE",
+            })
+            if (!response.ok) {
+                setColumnDeleteError(true)
+                return
+            }
+
+            setColumns(columns.filter((column) => column.id !== columnId))
+            setCards(cards.filter((card) => card.columnId !== columnId))
+
+        } catch (error) {
+            setColumnDeleteError(true)
+        }
+    }
+
 return (    
     <div className="flex gap-5 p-6 overflow-x-auto items-start justify-start min-h-screen bg-gray-50/50" >
         
         {columns.map((column) => (
             <div className="flex flex-col w-72 gap-3 bg-gray-100 p-4 rounded-xl shadow-sm shrink-0 border border-black/5" key={column.id}>
-                <h2 className="text-base font-semibold text-black/70 uppercase tracking-wide border-b pb-1">
-                    {column.title}
+                <h2 className="flex items-center justify-between text-base font-semibold text-black/70 uppercase tracking-wide border-b pb-1">
+                    <span>{column.title}</span>
+                    <button
+                        className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-black/5 hover:rounded "
+                        onClick={() => handleColumnDelete(column.id)}>
+                            Delete Column
+                    </button>
                 </h2>
+
                 
                 {cards
                  .filter( (card) => card.columnId === column.id )
@@ -56,7 +86,7 @@ return (
                         onCancel={() => setActiveColumnForCard(null)}/>
                 ) : (
                     <button
-                        className="mt-2 w-full text-left text-sm text-gray-500 hover:text-black hover:bg-black/5 p-2 rounded-lg transition"
+                        className="mt-2 w-full text-left text-sm text-gray-500 hover:text-black hover:bg-black/5 p-2 rounded-lg transition cursor-pointer"
                         onClick={() => setActiveColumnForCard(column.id)}>
                             + Add Card
                     </button>
@@ -72,9 +102,9 @@ return (
             />
         ) : (
             <button
-             className="w-72 shrink-0 bg-black/5 hover:bg-black/10 text-black/70 font-medium py-3 px-4 rounded-xl text-left transition"
+             className="w-auto shrink-0 bg-black/5 hover:bg-black/10 text-black/70 font-medium py-3 px-4 rounded-xl text-left transition cursor-pointer"
              onClick={ () => setNewColumnButton(true) }>
-                + Add another column
+                + Add column
             </button>
         )}
 
