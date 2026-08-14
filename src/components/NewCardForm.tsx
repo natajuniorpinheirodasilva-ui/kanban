@@ -5,14 +5,15 @@ import { Column, Card } from "@/generated/prisma/client"
 
 type Props = {
     columns: Column[];
+    initialColumnId?: string;
     onCreate: (card: Card) => void;
-    className?: string;
+    onCancel: () => void;
 }
 
-const NewCardForm = ({ columns, onCreate }: Props) => {
+const NewCardForm = ({ columns, initialColumnId = '', onCreate, onCancel }: Props) => {
 
     const [title, setTitle] = useState<string>('')
-    const [columnId, setColumnId] = useState<string>('')
+    const [columnId, setColumnId] = useState<string>(initialColumnId)
 
     const [titleError, setTitleError] = useState<boolean>(false)
     const [columnIdError, setColumnIdError] = useState<boolean>(false)
@@ -22,7 +23,7 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
     
     const errorClass = "border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 pt-1 leading-3.5"
 
-    async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         
         const hasTitleError = title === ""
@@ -50,7 +51,6 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
             const newCard = await response.json()
             
             onCreate(newCard)
-            setColumnId('')
             setTitle('')
             setApiError(false)
 
@@ -85,11 +85,19 @@ const NewCardForm = ({ columns, onCreate }: Props) => {
             ))}
         </select>
 
-        <button
-        className="bg-black/80 text-white rounded p-2 hover:bg-black/70 cursor-pointer"
-        type="submit">
-            Submit
-        </button>
+        <div className="flex items-center gap-2 mt-1">
+            <button
+            className="bg-black/80 text-white rounded p-2 hover:bg-black/70 cursor-pointer text-sm font-medium px-4"
+            type="submit">
+                Submit
+            </button>
+            <button
+            className="text-gray-500 hover:text-black text-sm font-medium rounded p-2 hover:bg-black/5 transition"
+            type="button"
+            onClick={onCancel}>
+                Cancel
+            </button>
+        </div>
 
         { apiError && 
             <p
