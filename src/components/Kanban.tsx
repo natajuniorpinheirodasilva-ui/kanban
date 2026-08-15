@@ -12,19 +12,20 @@ type Props = {
 
 function Kanban ({ board }: Props) {
     
+    // card useStates
     const [cards, setCards] = useState<Card[]>(board.columns.flatMap( (column) => column.cards) )
+    const [cardDeleteError ,setCardDeleteError] = useState<boolean>(false)
+    const [cardDeleteAlert, setCardDeleteAlert] = useState<boolean>(false)
+    const [cardIdToDelete, setCardIdToDelete] = useState<string | null>(null)
+
+    // column useStates
     const [columns, setColumns] = useState<Column[]>(board.columns)
-    
     const [activeColumnForCard, setActiveColumnForCard] = useState<null | string>(null)
     const [newColumnButton, setNewColumnButton] = useState<boolean>(false)
-
     const [columnDeleteError, setColumnDeleteError] = useState<boolean>(false)
-    const [cardDeleteError ,setCardDeleteError] = useState<boolean>(false)
+    const [columnIdToDelete, setColumnIdToDelete] = useState<string | null>(null)
+    const [columnDeleteAlert, setColumnDeleteAlert] = useState<boolean>(false)
 
-    const [cardDeleteAlert, setCardDeleteAlert] = useState<boolean>(false)
-    
-    const [cardIdToDelete, setCardIdToDelete] = useState<string | null>(null)
-    
     function handleCardCreate(newCard: Card) {
         setCards([...cards, newCard])
         setActiveColumnForCard(null)
@@ -35,14 +36,12 @@ function Kanban ({ board }: Props) {
         setNewColumnButton(false)
     }
 
-    // delete column function
-    async function handleColumnDelete(columnId: string) {        
-        if (!window.confirm("Delete this column and all its cards?")) {
-            return
-        }
+    // column delete function
+    async function handleColumnDelete() {        
+        if (!columnIdToDelete) return
 
         try {
-            const response = await fetch(`/api/columns/${columnId}`, {
+            const response = await fetch(`/api/columns/${columnIdToDelete}`, {
                 method: "DELETE",
             })
             if (!response.ok) {
@@ -50,15 +49,18 @@ function Kanban ({ board }: Props) {
                 return
             }
 
-            setColumns(columns.filter((column) => column.id !== columnId))
-            setCards(cards.filter((card) => card.columnId !== columnId))
+            setColumns(columns.filter((column) => column.id !== columnIdToDelete))
+            setCards(cards.filter((card) => card.columnId !== columnIdToDelete))
 
+            setColumnDeleteAlert(false)
+            setColumnIdToDelete(null)
+        
         } catch (error) {
             setColumnDeleteError(true)
         }
     }
 
-    // delete card function
+    // card delete function
     async function handleCardDelete() {
         if(!cardIdToDelete) return
         
@@ -90,7 +92,10 @@ return (
                     <span>{column.title}</span>
                     <button
                         className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-black/5 hover:rounded"
-                        onClick={() => handleColumnDelete(column.id)}>
+                        onClick={() => {
+                            setColumnIdToDelete(column.id);
+                            setColumnDeleteAlert(true); 
+                        }}>
                             Delete Column
                     </button>
                 </h2>
@@ -172,6 +177,35 @@ return (
                 </div>
             </div>
         }
+
+                { columnDeleteAlert &&
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white p-6 pt-4 rounded-xl shadow-lg flex flex-col items-start min-h-35 w-auto border-b-4 border-red-500 scale-126">
+                    <p className="font-semibold text-gray-800 text-xl underline decoration-2 decoration-red-500 drop-shadow-lg">
+                        Delete this <span className="font-bold">column</span>?
+                    </p>
+                    
+                    <div className="flex gap-6 w-full justify-start my-auto">
+                        <button
+                        className="w-auto text-left text-lg text-black hover:border-green-700 hover:bg-black/15 rounded-lg transition cursor-pointer border-b-2 hover:border-b-4 hover: shadow"
+                        onClick={ () => handleColumnDelete() }>
+                            Continue
+                        </button>
+                        
+                        <button
+                        className="w-auto text-left text-lg text-black hover:border-red-700 hover:bg-black/15 rounded-lg transition cursor-pointer border-b-2 hover:border-b-4 shadow"
+                        onClick={() => {
+                            setColumnDeleteAlert(false);
+                            setColumnIdToDelete(null)
+                        }}>
+                            Cancel
+                        </button>
+                    </div >  
+                </div>
+            </div>
+        }
+
+        
     </div>
 )}
 
