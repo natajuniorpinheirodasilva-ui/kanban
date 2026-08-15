@@ -11,7 +11,7 @@ type Props = {
 }
 
 function Kanban ({ board }: Props) {
-
+    
     const [cards, setCards] = useState<Card[]>(board.columns.flatMap( (column) => column.cards) )
     const [columns, setColumns] = useState<Column[]>(board.columns)
     
@@ -20,6 +20,10 @@ function Kanban ({ board }: Props) {
 
     const [columnDeleteError, setColumnDeleteError] = useState<boolean>(false)
     const [cardDeleteError ,setCardDeleteError] = useState<boolean>(false)
+
+    const [cardDeleteAlert, setCardDeleteAlert] = useState<boolean>(false)
+    
+    const [cardIdToDelete, setCardIdToDelete] = useState<string | null>(null)
     
     function handleCardCreate(newCard: Card) {
         setCards([...cards, newCard])
@@ -31,7 +35,8 @@ function Kanban ({ board }: Props) {
         setNewColumnButton(false)
     }
 
-    async function handleColumnDelete(columnId: string) {
+    // delete column function
+    async function handleColumnDelete(columnId: string) {        
         if (!window.confirm("Delete this column and all its cards?")) {
             return
         }
@@ -53,13 +58,12 @@ function Kanban ({ board }: Props) {
         }
     }
 
-    async function handleCardDelete(cardId: string) {
-        if(!window.confirm("Delete this card?")) {
-            return
-        }
+    // delete card function
+    async function handleCardDelete() {
+        if(!cardIdToDelete) return
         
         try {
-            const response = await fetch(`/api/cards/${cardId}`, {
+            const response = await fetch(`/api/cards/${cardIdToDelete}`, {
                 method: "DELETE",
             })
             if(!response.ok) {
@@ -67,7 +71,10 @@ function Kanban ({ board }: Props) {
                 return
             }
 
-            setCards(cards.filter((card) => card.id !== cardId))
+            setCards(cards.filter((card) => card.id !== cardIdToDelete))
+
+            setCardDeleteAlert(false)
+            setCardIdToDelete(null)
 
         } catch (error) {
             setCardDeleteError(true)
@@ -98,7 +105,10 @@ return (
                         <span>{card.title}</span>
                         <button
                         className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-black/5 hover:rounded p-1"
-                        onClick={() => handleCardDelete(card.id)}>
+                        onClick={() => {
+                            setCardIdToDelete(card.id); 
+                            setCardDeleteAlert(true); 
+                        }}>
                             Delete
                         </button>
                     </div>
@@ -135,6 +145,33 @@ return (
             </button>
         )}
 
+        {/* delete card pop-up */}
+        { cardDeleteAlert &&
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white p-6 pt-4 rounded-xl shadow-lg flex flex-col items-start min-h-35 w-auto border-b-4 border-red-500 scale-126">
+                    <p className="font-semibold text-gray-800 text-xl underline decoration-2 decoration-red-500 drop-shadow-lg">
+                        Delete this <span className="font-bold">card</span>?
+                    </p>
+                    
+                    <div className="flex gap-6 w-full justify-start my-auto">
+                        <button
+                        className="w-auto text-left text-lg text-black hover:border-green-700 hover:bg-black/15 rounded-lg transition cursor-pointer border-b-2 hover:border-b-4 hover: shadow"
+                        onClick={ () => handleCardDelete() }>
+                            Continue
+                        </button>
+                        
+                        <button
+                        className="w-auto text-left text-lg text-black hover:border-red-700 hover:bg-black/15 rounded-lg transition cursor-pointer border-b-2 hover:border-b-4 shadow"
+                        onClick={() => {
+                            setCardDeleteAlert(false);
+                            setCardIdToDelete(null)
+                        }}>
+                            Cancel
+                        </button>
+                    </div >  
+                </div>
+            </div>
+        }
     </div>
 )}
 
