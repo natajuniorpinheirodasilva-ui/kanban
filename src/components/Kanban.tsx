@@ -4,6 +4,7 @@ import { Card, Column } from "@/generated/prisma/client";
 import { BoardWithColumnsAndCards } from "@/lib/board";
 import NewCardForm from "@/components/NewCardForm";
 import NewColumnForm from "./NewColumnForm";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { useState } from "react";
 
 type Props = {
@@ -150,62 +151,27 @@ return (
             </button>
         )}
 
-        {/* delete card pop-up */}
         { cardDeleteAlert &&
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                <div className="bg-white p-6 pt-4 rounded-xl shadow-lg flex flex-col items-start min-h-35 w-auto border-b-4 border-red-500 scale-126">
-                    <p className="font-semibold text-gray-800 text-xl underline decoration-2 decoration-red-500 drop-shadow-lg">
-                        Delete this <span className="font-bold">card</span>?
-                    </p>
-                    
-                    <div className="flex gap-6 w-full justify-start my-auto">
-                        <button
-                        className="w-auto text-left text-lg text-black hover:border-green-700 hover:bg-black/15 rounded-lg transition cursor-pointer border-b-2 hover:border-b-4 hover: shadow"
-                        onClick={ () => handleCardDelete() }>
-                            Continue
-                        </button>
-                        
-                        <button
-                        className="w-auto text-left text-lg text-black hover:border-red-700 hover:bg-black/15 rounded-lg transition cursor-pointer border-b-2 hover:border-b-4 shadow"
-                        onClick={() => {
-                            setCardDeleteAlert(false);
-                            setCardIdToDelete(null)
-                        }}>
-                            Cancel
-                        </button>
-                    </div >  
-                </div>
-            </div>
+            <ConfirmDialog
+                message="Delete this card?"
+                onConfirm={handleCardDelete}
+                onCancel={() => {
+                    setCardDeleteAlert(false);
+                    setCardIdToDelete(null)
+                }}
+            />
         }
 
-                { columnDeleteAlert &&
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                <div className="bg-white p-6 pt-4 rounded-xl shadow-lg flex flex-col items-start min-h-35 w-auto border-b-4 border-red-500 scale-126">
-                    <p className="font-semibold text-gray-800 text-xl underline decoration-2 decoration-red-500 drop-shadow-lg">
-                        Delete this <span className="font-bold">column</span>?
-                    </p>
-                    
-                    <div className="flex gap-6 w-full justify-start my-auto">
-                        <button
-                        className="w-auto text-left text-lg text-black hover:border-green-700 hover:bg-black/15 rounded-lg transition cursor-pointer border-b-2 hover:border-b-4 hover: shadow"
-                        onClick={ () => handleColumnDelete() }>
-                            Continue
-                        </button>
-                        
-                        <button
-                        className="w-auto text-left text-lg text-black hover:border-red-700 hover:bg-black/15 rounded-lg transition cursor-pointer border-b-2 hover:border-b-4 shadow"
-                        onClick={() => {
-                            setColumnDeleteAlert(false);
-                            setColumnIdToDelete(null)
-                        }}>
-                            Cancel
-                        </button>
-                    </div >  
-                </div>
-            </div>
+        { columnDeleteAlert &&
+            <ConfirmDialog
+                message="Delete this column?"
+                onConfirm={handleColumnDelete}
+                onCancel={() => {
+                    setColumnDeleteAlert(false);
+                    setColumnIdToDelete(null)
+                }}
+            />
         }
-
-        
     </div>
 )}
 
