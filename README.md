@@ -21,7 +21,7 @@ A fullstack Kanban board built as a focused CRUD demonstration project: no authe
 - New Cards are created through an inline form scoped to the column they'll belong to; new Columns through a similar form at the end of the board
 
 ![Home](public/home.png)
-![Add column](public/add%20column.png)
+![Add column](public/add%20new%20column.png)
 ![Add card](public/add%20new%20card.png)
 ![Delete card](public/delete%20card.png)
 ![Delete column](public/delete%20column.png)
