@@ -268,7 +268,7 @@ return (
                         />
                     ) : (
                         <span
-                            className="cursor-pointer hover:underline truncate mr-2"
+                            className="cursor-pointer hover:underline break-words mr-2 flex-1 min-w-0"
                             title="Click to edit column title"
                             onClick={() => {
                                 setEditingColumnId(column.id)
@@ -319,7 +319,7 @@ return (
                             />
                         ) : (
                             <span
-                                className="cursor-pointer hover:underline truncate mr-2 flex-1"
+                                className="cursor-pointer hover:underline break-words mr-2 flex-1 min-w-0"
                                 title="Click to edit card title"
                                 onClick={() => {
                                     setEditingCardId(card.id)

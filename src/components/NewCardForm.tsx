@@ -65,7 +65,7 @@ const NewCardForm = ({ columns, initialColumnId = '', onCreate, onCancel }: Prop
     className="flex flex-col w-72 h-auto self-start gap-2 bg-white/5 border border-black/20 rounded-xl p-4 shadow-sm"
     onSubmit={handleSubmit} >
         <input
-        className="border border-black/20 rounded p-2"
+        className="border border-black/20 rounded p-2 bg-white"
         placeholder="Card title"
         value={title}
         type="text"
