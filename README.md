@@ -20,6 +20,12 @@ A fullstack Kanban board built as a focused CRUD demonstration project: no authe
 - Deleting a Column cascades to delete all Cards inside it (`onDelete: Cascade`), with a confirmation dialog before either delete goes through
 - New Cards are created through an inline form scoped to the column they'll belong to; new Columns through a similar form at the end of the board
 
+![Home](public/home.png)
+![Add column](public/add%20column.png)
+![Add card](public/add%20new%20card.png)
+![Delete card](public/delete%20card.png)
+![Delete column](public/delete%20column.png)
+
 ### Ordering
 
 - Both Columns and Cards carry a `position` field (`Float`, not `Int`), enabling midpoint-based reordering: inserting an item between two existing ones sets its position to the average of its neighbors, so only the moved item needs a database write, not every item after it
@@ -33,6 +39,9 @@ A fullstack Kanban board built as a focused CRUD demonstration project: no authe
 - Visual feedback while dragging: the dragged card lifts, fades, and tilts at a randomized angle; the column currently being dragged over highlights
 - Moves are applied optimistically (the UI updates immediately) and persisted via `PATCH` requests to the API in the background
 - Known limitation: dropping a card into a column currently always appends it to the end of that column, rather than inserting it at the exact drop position between two specific cards. Precise mid-column drop targeting was not implemented
+
+![Drag](public/drag.png)
+![Drop](public/drop.png)
 
 ### API
 
