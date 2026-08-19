@@ -97,13 +97,11 @@ export default function SignUp() {
     const [rememberMe, setRememberMe] = useState<boolean>(false)
 
     const [signUpError, setSignUpError] = useState<boolean>(false)
+    const [usedEmail, setUsedEmail] = useState<boolean>(false)
     const [unexpectedError, setUnexpectedError] = useState<boolean>(false)
     
     async function handleSignUp(event: React.SubmitEvent) {
         event.preventDefault()
-
-        setSignUpError(false)
-        setUnexpectedError(false)
 
         if (email.length === 0 || password.length === 0 || name.length === 0) {
             setSignUpError(true)
@@ -124,12 +122,15 @@ export default function SignUp() {
                 })
             })
 
-            if (response.status === 400 || response.status === 409) {
+            if (response.status === 400 || response.status === 401) {
                 setSignUpError(true)
                 return
             }
 
-
+            if(response.status === 409) {
+                setUsedEmail(true)
+                return
+            }
 
             if (!response.ok) {
                 setUnexpectedError(true)
@@ -141,6 +142,10 @@ export default function SignUp() {
         } catch (error) {
             setUnexpectedError(true)
         }
+
+        setUsedEmail(false)
+        setSignUpError(false)
+        setUnexpectedError(false)
     }
 
     const [columns, setColumns] = useState<Column[]>([
@@ -457,20 +462,28 @@ export default function SignUp() {
                         </Link>
                     </p>
                     
-                    {(signUpError || unexpectedError) && (
-                        <div className="w-3/4 h-px bg-linear-to-r from-transparent via-red-500 to-transparent mt-2"/> 
+                    {(signUpError || unexpectedError || usedEmail) && (
+                        <div className="w-3/4 h-px bg-linear-to-r from-transparent via-red-500 to-transparent mb-3 mt-3"/> 
                     )}
 
                     {signUpError && (
-                        <p className="w-full mt-3 mb-3 text-xs text-red-600 font-medium text-center">
+                        <p className="w-full mb-1 text-xs text-red-600 font-medium text-center">
                             Please check the fields and try again.
                         </p>
                     )}
 
                     {unexpectedError && (
-                        <div className="w-full mt-3 mb-3 text-xs text-red-600 font-medium text-center">
+                        <div className="w-full mb-1  text-xs text-red-600 font-medium text-center">
                             <p className="text-xs text-red-700 font-medium">
                                 Something went wrong. Please try again.
+                            </p>
+                        </div>
+                    )}
+
+                    {usedEmail && (
+                        <div className="w-full text-xs text-red-600 font-medium text-center">
+                            <p className="text-xs text-red-700 font-medium">
+                                E-mail already in use.
                             </p>
                         </div>
                     )}
