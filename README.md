@@ -1,14 +1,14 @@
 # Kanban
 
-A full-stack Kanban board built with Next.js, TypeScript, Prisma, and SQLite.
+A full-stack Kanban board built with **Next.js, React, TypeScript, Prisma, and SQLite**.
 
-The project provides a simple task management interface where users can create, edit, delete, and reorder columns and cards. Changes are persisted to a SQLite database through REST API routes built with Next.js Route Handlers.
+The project provides a task management interface where users can create, edit, delete, and reorder columns and cards. Changes are persisted to a SQLite database through REST API routes built with Next.js Route Handlers.
 
-> Authentication pages are currently implemented on the front end. Backend authentication is not yet available.
+> **Note:** Sign-in and sign-up interfaces are implemented, but authentication is not functional yet.
 
 ## Preview
 
-![Home](public/home.png)
+![Kanban Board](public/home.png)
 
 ## Features
 
@@ -17,69 +17,71 @@ The project provides a simple task management interface where users can create, 
 * Drag and drop cards between columns
 * Reorder columns using drag and drop
 * Optimistic UI updates
-* Persistent data using SQLite
-* REST API built with Next.js Route Handlers
-* Confirmation dialog before deleting cards or columns
+* Persistent data with SQLite
+* REST API using Next.js Route Handlers
+* Confirmation dialogs before deleting cards or columns
 * Responsive interface
-* Sign in and sign up pages
-* Server-side validation for create operations
+* Sign-in and sign-up interfaces
+* Server-side validation
 
-### Drag and Drop
+## Drag and Drop
 
-The board uses the native HTML5 Drag and Drop API without external drag-and-drop libraries.
+The board uses the native **HTML5 Drag and Drop API**, without external drag-and-drop libraries.
 
-Cards can be moved between columns, while columns can be reordered across the board. Changes are immediately reflected in the interface and persisted to the database through `PATCH` requests.
+Cards can be moved between columns and columns can be reordered across the board. Changes are reflected immediately in the interface and persisted to the database through `PATCH` requests.
 
 ![Drag](public/drag.png)
 ![Drop](public/drop.png)
 
-### Card and Column Management
+## Card and Column Management
 
-Cards and columns can be created directly from the board and their titles can be edited inline.
+Cards and columns can be created directly from the board. Their titles can also be edited inline.
 
-Deleting a column also removes its cards through Prisma's cascading delete behavior.
+Deleting a column automatically removes its cards through Prisma's cascading delete behavior.
 
-![Add column](public/add%20new%20column.png)
-![Add card](public/add%20new%20card.png)
-![Delete card](public/delete%20card.png)
-![Delete column](public/delete%20column.png)
+![Add Column](public/add%20new%20column.png)
+![Add Card](public/add%20new%20card.png)
+![Delete Card](public/delete%20card.png)
+![Delete Column](public/delete%20column.png)
 
-### Sign-in and Sign-up
+## Authentication UI
 
-Currently only working on the client side.
+Sign-in and sign-up pages are currently implemented as front-end interfaces only.
 
-![Sign-In](/public/sign-in.png)
-![Sign-Up](/public/sign-up.png)
+Authentication logic, user sessions, and user accounts are not implemented yet.
+
+![Sign In](public/sign-in.png)
+![Sign Up](public/sign-up.png)
 
 ## Tech Stack
 
-* Next.js
-* React 19
-* TypeScript
-* Tailwind CSS
-* Prisma ORM 7
-* SQLite
-* `@prisma/adapter-better-sqlite3`
+* **Next.js** — App Router and Route Handlers
+* **React 19** — user interface
+* **TypeScript** — static typing
+* **Tailwind CSS** — styling
+* **Prisma ORM 7** — database access and data modeling
+* **SQLite** — database
+* **better-sqlite3** — SQLite driver
 
 ## Project Structure
 
 ```text
 src/
 ├── app/
+│   ├── (auth)/
+│   │   ├── signin/
+│   │   └── signup/
 │   ├── api/
 │   │   ├── cards/
 │   │   └── columns/
-│   ├── signin/
-│   ├── signup/
+│   ├── board/
 │   ├── layout.tsx
 │   └── page.tsx
 │
 ├── components/
 │   ├── auth/
-│   ├── ConfirmDialog.tsx
-│   ├── Kanban.tsx
-│   ├── NewCardForm.tsx
-│   └── NewColumnForm.tsx
+│   ├── kanban/
+│   └── ui/
 │
 └── lib/
     ├── board.ts
@@ -112,17 +114,34 @@ DELETE  /api/columns/[id]
 
 ## Ordering
 
-Cards and columns contain a `position` field used to determine their order.
+Cards and columns contain a `position` field that determines their order on the board.
 
-Instead of sequential integers, new items use spaced positions. When an item is moved between two others, its new position can be calculated using the values of its neighbors.
+Instead of relying on sequential integers, items use spaced positions. When an item is reordered, its new position can be calculated based on neighboring items.
 
-This allows reordering without updating the position of every item on the board.
+This allows items to be reordered without updating the position of every card or column.
+
+## Database
+
+The project uses SQLite with Prisma ORM.
+
+The current data model follows this relationship:
+
+```text
+Board
+└── Column
+    └── Card
+```
+
+A default board with three columns is created by the seed script.
 
 ## Getting Started
 
 ### Prerequisites
 
-Make sure you have Node.js and npm installed.
+Make sure you have the following installed:
+
+* Node.js
+* npm
 
 ### Installation
 
@@ -165,34 +184,22 @@ npm run dev
 
 Open `http://localhost:3000` in your browser.
 
-## Database
-
-The project uses SQLite with Prisma ORM.
-
-The main relationship is:
-
-```text
-Board
-  └── Column
-        └── Card
-```
-
-A default board with three columns is created by the seed script.
-
 ## Known Limitations
 
-* Authentication pages currently provide only the front-end interface; authentication logic is not implemented yet
-* Cards dropped into another column are appended to the end instead of being inserted at the exact drop position
+* Authentication is not implemented yet
+* The application currently uses a single default board
+* Cards moved between columns are appended to the end of the target column instead of being inserted at the exact drop position
 * The `position` system does not currently perform automatic rebalancing
-* The application currently works with a single default board
 
 ## Roadmap
 
-* Implement authentication
-* Associate boards with users
-* Improve card positioning during drag and drop
-* Add support for multiple boards
+* [ ] Implement authentication
+* [ ] Associate boards with users
+* [ ] Add support for multiple boards
+* [ ] Improve card positioning during drag and drop
+* [ ] Add error handling for failed optimistic updates
+* [ ] Add automated tests
 
 ## License
 
-This project is for educational and portfolio purposes.
+This project was created for educational and portfolio purposes.
