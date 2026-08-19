@@ -8,7 +8,7 @@ import KanbanColumn from "./KanbanColumn"
 import { useState } from "react"
 
 type Props = {
-    board: BoardWithColumnsAndCards
+    board: BoardWithColumnsAndCards;
 }
 
 function Kanban({ board }: Props) {

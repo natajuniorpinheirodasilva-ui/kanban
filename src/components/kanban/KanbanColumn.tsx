@@ -5,44 +5,40 @@ import KanbanCard from "./KanbanCard"
 import NewCardForm from "@/components/kanban/NewCardForm"
 
 type KanbanColumnProps = {
-  column: Column
-  cards: Card[]
-  columns: Column[]
-  isDragOver: boolean
-  isColumnDragging: boolean
-  draggedCardId: string | null
-  
-  // Handlers para Drag & Drop
-  onDragOverColumn: (columnId: string) => void
-  onDropOnColumn: (columnId: string) => void
-  onColumnDragStart: (columnId: string) => void
-  onColumnDragEnd: () => void
+  column: Column;
+  cards: Card[];
+  columns: Column[];
+  isDragOver: boolean;
+  isColumnDragging: boolean;
+  draggedCardId: string | null;
 
-  // Handlers da Coluna
-  editingColumnId: string | null
-  editingColumnTitle: string
-  onStartEditColumn: (column: Column) => void
-  onEditColumnTitleChange: (title: string) => void
-  onSaveColumnTitle: (columnId: string) => void
-  onCancelEditColumn: () => void
-  onDeleteColumnClick: (columnId: string) => void
+  onDragOverColumn: (columnId: string) => void;
+  onDropOnColumn: (columnId: string) => void;
+  onColumnDragStart: (columnId: string) => void;
+  onColumnDragEnd: () => void;
 
-  // Handlers do Card
-  editingCardId: string | null
-  editingCardTitle: string
-  onCardDragStart: (cardId: string) => void
-  onCardDragEnd: () => void
-  onStartEditCard: (card: Card) => void
-  onEditCardTitleChange: (title: string) => void
-  onSaveCardTitle: (cardId: string) => void
-  onCancelEditCard: () => void
-  onDeleteCardClick: (cardId: string) => void
+  editingColumnId: string | null;
+  editingColumnTitle: string;
+  onStartEditColumn: (column: Column) => void;
+  onEditColumnTitleChange: (title: string) => void;
+  onSaveColumnTitle: (columnId: string) => void;
+  onCancelEditColumn: () => void;
+  onDeleteColumnClick: (columnId: string) => void;
 
-  // Handlers de criação de card
-  activeColumnForCard: string | null
-  onActivateNewCardForm: (columnId: string) => void
-  onCancelNewCardForm: () => void
-  onCardCreate: (card: Card) => void
+  editingCardId: string | null;
+  editingCardTitle: string;
+  onCardDragStart: (cardId: string) => void;
+  onCardDragEnd: () => void;
+  onStartEditCard: (card: Card) => void;
+  onEditCardTitleChange: (title: string) => void;
+  onSaveCardTitle: (cardId: string) => void;
+  onCancelEditCard: () => void;
+  onDeleteCardClick: (cardId: string) => void;
+
+  activeColumnForCard: string | null;
+  onActivateNewCardForm: (columnId: string) => void;
+  onCancelNewCardForm: () => void;
+  onCardCreate: (card: Card) => void;
 }
 
 export default function KanbanColumn({
@@ -89,7 +85,6 @@ export default function KanbanColumn({
       onDragEnter={() => onDragOverColumn(column.id)}
       onDrop={() => onDropOnColumn(column.id)}
     >
-      {/* Header da Coluna */}
       <h2
         className={`flex items-center justify-between text-base font-semibold uppercase tracking-wide border-b pb-1 cursor-grab active:cursor-grabbing transition-all duration-200 ${
           isColumnDragging ? "opacity-40 text-red-700" : "opacity-100 text-black/70"
@@ -129,7 +124,6 @@ export default function KanbanColumn({
         </button>
       </h2>
 
-      {/* Lista de Cards */}
       {cards.map((card) => (
         <KanbanCard
           key={card.id}
@@ -147,7 +141,6 @@ export default function KanbanColumn({
         />
       ))}
 
-      {/* Botão / Form para Novo Card */}
       {isAddingCard ? (
         <NewCardForm
           columns={columns}

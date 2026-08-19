@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from "@/generated/prisma/client";
+import { Card } from "@/generated/prisma/client"
 
 type KanbanCardProps = {
     card: Card;
@@ -14,7 +14,7 @@ type KanbanCardProps = {
     onSaveEdit: (cardId: string) => void;
     onCancelEdit: () => void;
     onDeleteClick: (cardId: string) => void;
-};
+}
 
 export default function KanbanCard({
     card,
@@ -48,8 +48,8 @@ export default function KanbanCard({
           onChange={(e) => onEditChange(e.target.value)}
           onBlur={() => onSaveEdit(card.id)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") onSaveEdit(card.id);
-            if (e.key === "Escape") onCancelEdit();
+            if (e.key === "Enter") onSaveEdit(card.id)
+            if (e.key === "Escape") onCancelEdit()
           }}
           autoFocus
         />
@@ -70,5 +70,5 @@ export default function KanbanCard({
         Delete
       </button>
     </div>
-  );
+  )
 }
