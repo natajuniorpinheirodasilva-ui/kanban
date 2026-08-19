@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { GripVertical, Lightbulb } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 import Input from "@/components/auth/Input"
 import Button from "@/components/auth/Button"
@@ -84,10 +85,66 @@ const allPossibleCards: Card[] = [
         tag: "Docs",
         tagType: "gray",
         completed: true
-    }
+    },
 ]
 
 export default function SignIn() {
+    const router = useRouter()
+    
+    const [email, setEmail] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
+    const [rememberMe, setRememberMe] = useState<boolean>(false)
+
+    const [signInError, setSignInError] = useState<boolean>(false)
+    const [unexpectedError, setUnexpectedError] = useState<boolean>(false)
+
+    async function handleSignIn(event: React.SubmitEvent) {
+        event.preventDefault()
+
+        setSignInError(false)
+        setUnexpectedError(false)
+
+        if (email.length === 0) {
+            setSignInError(true)
+        }
+
+        if (password.length === 0) {
+            setSignInError(true)
+        }
+
+        if (email.length === 0 || password.length === 0) {
+            return
+        }
+
+        try {
+            const response = await fetch("/api/auth/signin", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    rememberMe
+                })
+            })
+
+            if (response.status === 401 || response.status === 409) {
+                setSignInError(true)
+                return
+            }
+
+            if (!response.ok) {
+                setUnexpectedError(true)
+                return
+            }
+            
+            router.push("/board")
+        } catch (error) {
+            setUnexpectedError(true)
+        }
+    }
+
     const [columns, setColumns] = useState<Column[]>([
         {
             id: "todo",
@@ -339,7 +396,10 @@ export default function SignIn() {
 
             {/* Right side */}
             <div className="relative flex flex-col justify-center items-center w-full lg:w-1/2 bg-linear-to-br from-red-900 via-red-600 to-rose-950 overflow-hidden p-6 xl:p-8">
-                <form className="relative z-10 flex flex-col items-center w-full max-w-sm sm:max-w-md bg-white/95 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 rounded-3xl">
+                <form
+                onSubmit={handleSignIn}
+                className="relative z-10 flex flex-col items-center w-full max-w-sm sm:max-w-md bg-white/95 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 rounded-3xl"
+                >
                     <h1 className="text-3xl font-bold text-black">
                         Sign in
                     </h1>
@@ -352,17 +412,21 @@ export default function SignIn() {
                         <Input
                             type="email"
                             placeholder="E-mail"
+                            onChange={(e) => setEmail(e.target.value)}
                         />
 
                         <Input
                             type="password"
                             placeholder="Password"
+                            onChange={(e) => setPassword(e.target.value)}
                         />
 
                         <div className="flex items-center justify-start gap-2.5 w-full mt-3 mb-6">
                             <input
                                 type="checkbox"
                                 id="remember"
+                                checked={rememberMe}
+                                onChange={(e) => setRememberMe(e.target.checked)}
                                 className="w-4 h-4 accent-red-600 cursor-pointer rounded shrink-0 ml-4"
                             />
 
@@ -374,7 +438,9 @@ export default function SignIn() {
                             </label>
                         </div>
 
-                        <Button type="submit">
+                        <Button
+                        type="submit"
+                        >
                             Sign in
                         </Button>
                     </div>
@@ -388,6 +454,25 @@ export default function SignIn() {
                             Sign up
                         </Link>
                     </p>
+                    
+                    {(signInError || unexpectedError) && (
+                        <div className="w-3/4 h-px bg-linear-to-r from-transparent via-red-500 to-transparent mt-2"/> 
+                    )}
+
+                    {signInError && (
+                        <p className="w-full mt-3 mb-3 text-xs text-red-600 font-medium text-center">
+                            Please check the fields and try again.
+                        </p>
+                    )}
+
+                    {unexpectedError && (
+                        <div className="w-full mt-3 mb-3 text-xs text-red-600 font-medium text-center">
+                            <p className="text-xs text-red-700 font-medium">
+                                Something went wrong. Please try again.
+                            </p>
+                        </div>
+                    )}
+
                 </form>
             </div>
         </div>
