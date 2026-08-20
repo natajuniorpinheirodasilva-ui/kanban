@@ -41,7 +41,7 @@ function Input({ type, placeholder, value, onChange }: Props) {
       )}
       <div className="absolute bottom-0 left-0 h-px w-full bg-gray-500"/>
 
-      <span className="absolute bottom-0 left-0 h-0.5 w-full origin-center scale-x-0 bg-red-600 transition-transform duration-300 pointer-events-none peer-focus:scale-x-100" />
+      <span className="absolute bottom-0 left-0 h-0.5 w-full origin-center scale-x-0 bg-primary transition-transform duration-300 pointer-events-none peer-focus:scale-x-100" />
     </div>
   )
 }

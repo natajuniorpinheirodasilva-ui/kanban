@@ -36,7 +36,7 @@ export default function KanbanCard({
       onDragEnd={onDragEnd}
       className={`flex items-center justify-between border rounded-xl p-4 text-black cursor-grab select-none active:cursor-grabbing transition-all duration-200 ${
         isDragging
-          ? "opacity-60 scale-105 shadow-md bg-red-50 border-red-300"
+          ? "opacity-60 scale-105 shadow-md bg-primary-light border-primary-border"
           : "opacity-100 scale-100 shadow-sm bg-white border-black/10"
       }`}
     >

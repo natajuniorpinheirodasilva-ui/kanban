@@ -79,7 +79,7 @@ const NewColumnForm = ({ boardId, onCreate, onCancel }: Props) => {
         { apiError &&
             <p
             key={`api-${errorTrigger}`}
-            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1 text-red-500 border-red-200">
+            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1 text-danger border-danger-border">
                 API Error, try again later.
             </p>
         }
@@ -87,7 +87,7 @@ const NewColumnForm = ({ boardId, onCreate, onCancel }: Props) => {
         { titleError &&
             <p
             key={`title-${errorTrigger}`}
-            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1 text-red-500 border-red-200">
+            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1 text-danger border-danger-border">
                 Title error.
             </p>
         }

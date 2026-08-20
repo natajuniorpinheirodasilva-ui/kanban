@@ -79,7 +79,7 @@ export default function KanbanColumn({
   return (
     <div
       className={`flex flex-col w-72 gap-3 p-4 rounded-xl shadow-sm shrink-0 border transition-colors duration-200 ${
-        isDragOver ? "bg-red-50 border-red-400" : "bg-gray-100 border-black/5"
+        isDragOver ? "bg-primary-light border-primary-border" : "bg-gray-100 border-black/5"
       } min-h-25`}
       onDragOver={(e) => e.preventDefault()}
       onDragEnter={() => onDragOverColumn(column.id)}
@@ -87,7 +87,7 @@ export default function KanbanColumn({
     >
       <h2
         className={`flex items-center justify-between text-base font-semibold uppercase tracking-wide border-b pb-1 cursor-grab active:cursor-grabbing transition-all duration-200 ${
-          isColumnDragging ? "opacity-40 text-red-700" : "opacity-100 text-black/70"
+          isColumnDragging ? "opacity-40 text-primary-hover" : "opacity-100 text-black/70"
         }`}
         draggable={!isEditingColumn}
         onDragStart={() => onColumnDragStart(column.id)}

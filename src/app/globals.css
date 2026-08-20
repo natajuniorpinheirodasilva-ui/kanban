@@ -1,17 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: #dc2626;
+  --primary-hover: #b91c1c;
+  --primary-light: #fef2f2;
+  --primary-border: #fca5a5;
+  --primary-muted: #f87171;
+  --primary-dark: #7f1d1d;
+  --primary-deep: #4c0519;
+
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --danger-light: #fef2f2;
+  --danger-border: #fecaca;
+  --danger-dark: #7f1d1d;
+
+  --background: #f9fafb;
+  --surface: #ffffff;
+  --foreground: #111827;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #FAFAFA; 
-    --foreground: #171717;
-  }
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+  --color-primary-border: var(--primary-border);
+  --color-primary-muted: var(--primary-muted);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-deep: var(--primary-deep);
+
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-light: var(--danger-light);
+  --color-danger-border: var(--danger-border);
+  --color-danger-dark: var(--danger-dark);
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
 }
 
 body {
@@ -42,15 +70,15 @@ body {
 }
 
 @keyframes errorAnimation {
-  0%, 100% { transform: translateX(0); color: #ef4444; }
+  0%, 100% { transform: translateX(0); color: var(--danger); }
   10% { transform: translateX(-6px); }
   20% { transform: translateX(6px); }
   30% { transform: translateX(-6px); }
-  40% { transform: translateX(0); color: #450a0a; }
+  40% { transform: translateX(0); color: var(--primary-deep); }
 
-  70% { color: #ef4444; }
+  70% { color: var(--danger); }
 
-  100% { color:black }
+  100% { color: var(--foreground); }
 }
 
 .animate-error {

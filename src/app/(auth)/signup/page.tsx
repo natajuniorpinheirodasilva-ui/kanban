@@ -158,7 +158,7 @@ export default function SignUp() {
         {
             id: "in-progress",
             title: "In Progress",
-            dotColor: "bg-red-600 animate-ping",
+            dotColor: "bg-primary animate-ping",
             cards: []
         },
         {
@@ -189,7 +189,7 @@ export default function SignUp() {
             {
                 id: "in-progress",
                 title: "In Progress",
-                dotColor: "bg-red-600 animate-ping",
+                dotColor: "bg-primary animate-ping",
                 cards: shuffledCards.slice(2, 4)
             },
             {
@@ -263,12 +263,12 @@ export default function SignUp() {
             {/* Left side */}
             <div className="hidden lg:flex w-1/2 bg-gray-50 relative overflow-hidden items-center justify-center p-6 select-none border-r border-gray-200">
                 <div className="absolute top-6 text-xs text-gray-500 font-medium flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm z-20">
-                    <Lightbulb className="w-4 h-4 text-red-400" />
+                    <Lightbulb className="w-4 h-4 text-primary-muted" />
                     <span>Drag cards to reorder</span>
                 </div>
 
-                <div className="absolute -top-20 -left-20 w-80 h-80 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -top-20 -left-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
 
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-size-[2.5rem_2.5rem] mask-[radial-gradient(ellipse_65%_55%_at_50%_50%,#000_70%,transparent_100%)] opacity-70" />
 
@@ -299,12 +299,12 @@ export default function SignUp() {
                             <div className="flex flex-col gap-2.5 flex-1">
                                 {column.cards.map(card => {
                                     const cardStyle = card.urgent
-                                        ? "bg-white border border-red-500/40 shadow-md shadow-red-500/5"
+                                        ? "bg-white border border-danger/40 shadow-md shadow-danger/5"
                                         : "bg-gray-50 border border-gray-200 shadow-sm hover:border-gray-300"
 
                                     const tagStyle =
                                         card.tagType === "red" || card.urgent
-                                            ? "text-red-600 bg-red-50 border border-red-100"
+                                            ? "text-danger bg-danger-light border border-danger-border"
                                             : card.completed
                                                 ? "text-black bg-gray-200"
                                                 : "text-gray-700 bg-gray-200"
@@ -333,7 +333,7 @@ export default function SignUp() {
                                             `}
                                         >
                                             {card.urgent && (
-                                                <div className="absolute top-0 left-0 w-1 h-full bg-red-600" />
+                                                <div className="absolute top-0 left-0 w-1 h-full bg-danger" />
                                             )}
 
                                             <div className="flex items-center justify-between gap-1">
@@ -369,7 +369,7 @@ export default function SignUp() {
 
                                             {card.urgent && (
                                                 <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2.5 overflow-hidden">
-                                                    <div className="bg-red-600 h-1.5 rounded-full w-3/4 animate-pulse" />
+                                                    <div className="bg-danger h-1.5 rounded-full w-3/4 animate-pulse" />
                                                 </div>
                                             )}
 
@@ -398,7 +398,7 @@ export default function SignUp() {
             </div>
 
             {/* Right side */}
-            <div className="relative flex flex-col justify-center items-center w-full lg:w-1/2 bg-linear-to-br from-red-900 via-red-600 to-rose-950 overflow-hidden p-6 xl:p-8">
+            <div className="relative flex flex-col justify-center items-center w-full lg:w-1/2 bg-linear-to-br from-primary-dark via-primary to-primary-deep overflow-hidden p-6 xl:p-8">
                 <form 
                     onSubmit={handleSignUp}
                     className="relative z-10 flex flex-col items-center w-full max-w-sm sm:max-w-md bg-white/95 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 rounded-3xl"
@@ -436,7 +436,7 @@ export default function SignUp() {
                                 id="remember"
                                 checked={rememberMe}
                                 onChange={(e) => setRememberMe(e.target.checked)}
-                                className="w-4 h-4 accent-red-600 cursor-pointer rounded shrink-0 ml-4"
+                                className="w-4 h-4 accent-primary cursor-pointer rounded shrink-0 ml-4"
                             />
 
                             <label
@@ -455,7 +455,7 @@ export default function SignUp() {
                     <p className="mt-6 text-sm text-black">
                         Already have an account?{" "}
                         <Link
-                            className="text-red-600 font-semibold underline"
+                            className="text-primary font-semibold underline"
                             href="/signin"
                         >
                             Sign in
@@ -463,26 +463,26 @@ export default function SignUp() {
                     </p>
                     
                     {(signUpError || unexpectedError || usedEmail) && (
-                        <div className="w-3/4 h-px bg-linear-to-r from-transparent via-red-500 to-transparent mb-3 mt-3"/> 
+                        <div className="w-3/4 h-px bg-linear-to-r from-transparent via-danger to-transparent mb-3 mt-3"/> 
                     )}
 
                     {signUpError && (
-                        <p className="w-full mb-1 text-xs text-red-600 font-medium text-center">
+                        <p className="w-full mb-1 text-xs text-danger font-medium text-center">
                             Please check the fields and try again.
                         </p>
                     )}
 
                     {unexpectedError && (
-                        <div className="w-full mb-1  text-xs text-red-600 font-medium text-center">
-                            <p className="text-xs text-red-700 font-medium">
+                        <div className="w-full mb-1  text-xs text-danger font-medium text-center">
+                            <p className="text-xs text-danger-hover font-medium">
                                 Something went wrong. Please try again.
                             </p>
                         </div>
                     )}
 
                     {usedEmail && (
-                        <div className="w-full text-xs text-red-600 font-medium text-center">
-                            <p className="text-xs text-red-700 font-medium">
+                        <div className="w-full text-xs text-danger font-medium text-center">
+                            <p className="text-xs text-danger-hover font-medium">
                                 E-mail already in use.
                             </p>
                         </div>
