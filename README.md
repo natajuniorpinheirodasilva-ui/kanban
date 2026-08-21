@@ -1,77 +1,112 @@
 # Kanban
 
-A full-stack Kanban board built with Next.js, TypeScript, Prisma, and SQLite.
+A full-stack Kanban board built with Next.js, React, TypeScript, Prisma, and SQLite.
 
-The project provides a task management interface where users can create, edit, delete, and reorder columns and cards. Changes are persisted to a SQLite database through REST API routes built with Next.js Route Handlers.
-
-Authentication is currently being implemented with user accounts, password hashing, database-backed sessions, and HTTP-only cookies.
+The application allows users to create an account, manage their own board, and organize cards and columns through a responsive drag-and-drop interface. All changes are persisted through REST-style Route Handlers, and every board operation is scoped to the authenticated user.
 
 ## Preview
 
-![Home](public/home.png)
+![Preview](/public/preview.png)
 
 ## Features
 
-- Create, edit, and delete cards
+- User registration and sign-in
+- Password hashing with bcryptjs
+- Database-backed authentication sessions
+- HTTP-only session cookies
+- Optional persistent login with **Remember me**
+- Protected board access
+- User-specific boards and data isolation
+- User menu with logout
+- Session invalidation during logout
 - Create, edit, and delete columns
+- Create, edit, move, and delete cards
 - Drag and drop cards between columns
 - Reorder columns using drag and drop
 - Optimistic UI updates
-- Persistent data using SQLite
+- Confirmation dialogs for destructive actions
+- Persistent data with SQLite and Prisma
 - REST API built with Next.js Route Handlers
-- Confirmation dialog before deleting cards or columns
+- Centralized semantic color palette with Tailwind CSS
 - Responsive interface
-- Sign in and sign up
-- Password hashing
-- Database-backed user sessions
-- Remember me support
-- Server-side validation
 
-### Authentication
+## Authentication
 
-The application includes sign-in and sign-up flows connected to the backend.
+Users can create an account or sign in with an existing one. Passwords are hashed before being stored in the database.
 
-Passwords are hashed before being stored in the database. After successful authentication, a session is created and associated with the user.
+After successful authentication, the backend creates a session associated with the user. Its random token is stored in an HTTP-only cookie, while the session itself remains in the database with an expiration date.
 
-The session token is stored in an HTTP-only cookie instead of exposing authentication data directly to client-side JavaScript.
+The **Remember me** option controls the cookie behavior:
 
-The **Remember me** option controls whether the authentication cookie persists after the browser session ends.
+- When enabled, the cookie persists for up to 30 days.
+- When disabled, a browser-session cookie is used.
+- The database session still has an expiration date in both cases.
 
-Authentication is still being integrated with the rest of the application. Protected board access and logout are not yet implemented.
+Protected requests validate the cookie token, database session, expiration date, and associated user. The application never trusts a `userId` supplied by the frontend to determine data ownership.
 
-![Sign-In](public/sign-in.png)
-![Sign-Up](public/sign-up.png)
+![Signup](public/signup.png)
 
-### Drag and Drop
+![Signin](public/signin.png)
 
-The board uses the native HTML5 Drag and Drop API without external drag-and-drop libraries.
+## User-Specific Boards
 
-Cards can be moved between columns, while columns can be reordered across the board. Changes are immediately reflected in the interface and persisted to the database through `PATCH` requests.
+Each account receives an initial board during registration with three columns:
+
+- To Do
+- In Progress
+- Done
+
+The `/board` page loads only the board that belongs to the authenticated user. Card and column endpoints also verify resource ownership before creating, editing, moving, or deleting data.
+
+![User1](public/user1.png)
+
+![User2](public/user2.png)
+
+## User Menu and Logout
+
+The navbar includes a user menu that displays the current user's name and provides the logout action as showed above.
+
+Logging out removes the current session from the database, deletes the session cookie, and redirects the user to the authentication area. The menu also closes when clicking outside it or pressing `Escape`.
+
+## Drag and Drop
+
+The board currently uses the native HTML5 Drag and Drop API without an external drag-and-drop library.
+
+Cards can be moved between columns, and columns can be reordered across the board. The interface updates optimistically while the new position is persisted through `PATCH` requests.
 
 ![Drag](public/drag.png)
+
 ![Drop](public/drop.png)
 
-### Card and Column Management
+## Card and Column Management
 
-Cards and columns can be created directly from the board and their titles can be edited inline.
+Cards and columns can be created directly from the board. Their titles support inline editing, and destructive actions require confirmation.
 
-Deleting a column also removes its cards through Prisma's cascading delete behavior.
+Deleting a column also deletes its cards through Prisma's cascading delete behavior.
 
-![Add column](public/add%20new%20column.png)
-![Add card](public/add%20new%20card.png)
-![Delete card](public/delete%20card.png)
-![Delete column](public/delete%20column.png)
+![Column](public/column.png)
+
+![Card](public/card.png)
+
+![Delete](public/delete.png)
+
+## Design System
+
+The interface uses a white, gray, black, and red visual identity. Reusable semantic colors such as `primary`, `danger`, `background`, and `surface` are defined in `globals.css` and exposed to Tailwind CSS.
+
+Shared animations, including the reusable `hover-lift` interaction, are also defined globally to keep component styles consistent.
 
 ## Tech Stack
 
-- Next.js
+- Next.js 16 with App Router
 - React 19
 - TypeScript
-- Tailwind CSS
+- Tailwind CSS 4
 - Prisma ORM 7
 - SQLite
-- bcryptjs
 - `@prisma/adapter-better-sqlite3`
+- bcryptjs
+- Lucide React
 
 ## Project Structure
 
@@ -84,37 +119,35 @@ src/
 │   ├── api/
 │   │   ├── auth/
 │   │   │   ├── signin/
-│   │   │   └── signup/
+│   │   │   ├── signup/
+│   │   │   └── logout/
 │   │   ├── cards/
 │   │   └── columns/
-│   ├── layout.tsx
-│   └── page.tsx
-│
+│   ├── board/
+│   ├── globals.css
+│   └── layout.tsx
 ├── components/
 │   ├── auth/
-│   ├── ConfirmDialog.tsx
-│   ├── Kanban.tsx
-│   ├── NewCardForm.tsx
-│   └── NewColumnForm.tsx
-│
+│   ├── kanban/
+│   └── ui/
 └── lib/
+    ├── auth.ts
     ├── board.ts
     └── Prisma.ts
 
 prisma/
-├── schema.prisma
-└── seed.ts
+├── migrations/
+└── schema.prisma
 ```
 
-## API
-
-The application uses REST-style Route Handlers for authentication, card, and column operations.
+## API Routes
 
 ### Authentication
 
 ```text
-POST    /api/auth/signin
 POST    /api/auth/signup
+POST    /api/auth/signin
+POST    /api/auth/logout
 ```
 
 ### Cards
@@ -133,36 +166,39 @@ PATCH   /api/columns/[id]
 DELETE  /api/columns/[id]
 ```
 
+All card and column routes require a valid session and verify that the requested resource belongs to the authenticated user.
+
 ## Database
 
-The project uses SQLite with Prisma ORM.
-
-The current data model follows this structure:
+The project uses SQLite through Prisma ORM. Its main relationships are:
 
 ```text
 User
-├── Board
-│   └── Column
-│       └── Card
-│
-└── Session
+├── Session
+└── Board
+    └── Column
+        └── Card
 ```
 
-Users can own boards and authentication sessions. Sessions store a unique token and expiration date used by the authentication system.
+- A user can own boards and sessions.
+- A session belongs to one user.
+- A board belongs to one user.
+- A column belongs to one board.
+- A card belongs to one column.
+- Cascading deletes are configured where appropriate.
 
 ## Ordering
 
-Cards and columns contain a `position` field used to determine their order.
+Cards and columns use a floating-point `position` field to determine their order.
 
-Instead of sequential integers, new items use spaced positions. When an item is moved between two others, its new position can be calculated using the values of its neighbors.
-
-This allows reordering without updating the position of every item on the board.
+New items receive spaced position values, and drag-and-drop operations calculate updated positions before persisting them. This avoids rewriting every record during simple reorder operations.
 
 ## Getting Started
 
 ### Prerequisites
 
-Make sure you have Node.js and npm installed.
+- Node.js
+- npm
 
 ### Installation
 
@@ -179,10 +215,10 @@ Install the dependencies:
 npm install
 ```
 
-Create the environment file:
+Create a `.env` file in the project root:
 
-```bash
-cp .env.example .env
+```env
+DATABASE_URL="file:./dev.db"
 ```
 
 Generate the Prisma Client:
@@ -191,7 +227,7 @@ Generate the Prisma Client:
 npx prisma generate
 ```
 
-Run the database migrations:
+Apply the database migrations:
 
 ```bash
 npx prisma migrate dev
@@ -203,24 +239,26 @@ Start the development server:
 npm run dev
 ```
 
-Open `http://localhost:3000` in your browser.
+Open `http://localhost:3000/signup` to create an account.
 
 ## Known Limitations
 
-- Authentication is not yet connected to protected board access
-- Logout is not yet implemented
-- Cards dropped into another column are appended to the end instead of being inserted at the exact drop position
-- The `position` system does not currently perform automatic rebalancing
-- Multi-board support is not yet implemented
+- Each user currently has one initial board.
+- Multi-board creation and switching are not implemented.
+- Cards moved to another column are appended instead of inserted at an exact drop position.
+- Position values are not automatically rebalanced after many reorder operations.
+- The current drag-and-drop implementation has limited touch and keyboard support.
+- Expired sessions are validated but not automatically removed from the database.
 
 ## Roadmap
 
-- Protect board routes using the authenticated session
-- Load boards based on the authenticated user
-- Implement logout and session invalidation
-- Improve card positioning during drag and drop
-- Add support for multiple boards
+- Adopt dnd-kit for improved sorting, touch support, and keyboard accessibility
+- Support exact card placement within and between columns
+- Add automatic position rebalancing
+- Add multiple boards per user
+- Add profile and settings options to the user menu
+- Add automatic cleanup for expired sessions
 
 ## License
 
-This project is for educational and portfolio purposes.
+This project was created for educational and portfolio purposes.
