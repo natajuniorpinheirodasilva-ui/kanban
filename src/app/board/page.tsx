@@ -8,7 +8,7 @@ import { redirect } from "next/navigation"
 export default async function Home() {
 
   const user = await getCurrentUser()
-  if(!user) {
+  if (!user) {
     redirect("/signup")
   }
 
@@ -23,8 +23,8 @@ export default async function Home() {
 
   return (
     <div>
-      <NavBar/>
-      <Kanban board={board}/>
+      <NavBar userName={user.name} />
+      <Kanban board={board} />
     </div>
   )
 }

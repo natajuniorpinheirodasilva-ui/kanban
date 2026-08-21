@@ -33,13 +33,13 @@ function Input({ type, placeholder, value, onChange }: Props) {
           className="absolute right-2 top-2 text-gray-500 hover:text-gray-800 transition-colors focus:outline-none"
         >
           {showPassword ? (
-            <Eye className="w-5 h-5"/>
+            <Eye className="w-5 h-5" />
           ) : (
-            <EyeClosed className="w-5 h-5"/>
+            <EyeClosed className="w-5 h-5" />
           )}
         </button>
       )}
-      <div className="absolute bottom-0 left-0 h-px w-full bg-gray-500"/>
+      <div className="absolute bottom-0 left-0 h-px w-full bg-gray-500" />
 
       <span className="absolute bottom-0 left-0 h-0.5 w-full origin-center scale-x-0 bg-primary transition-transform duration-300 pointer-events-none peer-focus:scale-x-100" />
     </div>
