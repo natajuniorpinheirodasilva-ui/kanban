@@ -27,11 +27,11 @@ const ConfirmDialog = ({ message, onConfirm, onCancel }: Props) => {
 
                 <div className="flex items-center justify-end gap-3 w-full">
                     <button className={cancelBtnClass} onClick={onCancel}>
-                        Cancelar
+                        Cancel
                     </button>
 
                     <button className={confirmBtnClass} onClick={onConfirm}>
-                        Continuar
+                        Continue
                     </button>
                 </div>
             </div>
