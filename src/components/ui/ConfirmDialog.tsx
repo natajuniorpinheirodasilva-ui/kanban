@@ -6,11 +6,11 @@ type Props = {
     onCancel: () => void
 }
 
-const baseBtnClass = "px-4 py-2 rounded-lg font-medium transition-all duration-150 ease-out cursor-pointer text-sm sm:text-base border-b-2 active:translate-y-0.5 active:border-b-0"
+const baseBtnClass = "hover-lift px-4 py-2 rounded-lg font-medium cursor-pointer text-sm sm:text-base border-b-2 active:border-b-0"
 
-const confirmBtnClass = `${baseBtnClass} bg-danger text-white border-danger-hover hover:bg-danger-hover hover:border-danger-dark shadow-sm hover:-translate-y-0.5 hover:shadow-md`
+const confirmBtnClass = `${baseBtnClass} bg-danger text-white border-danger-hover hover:bg-danger-hover hover:border-danger-dark shadow-sm`
 
-const cancelBtnClass = `${baseBtnClass} bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 hover:text-gray-900 hover:border-gray-400 hover:-translate-y-0.5`
+const cancelBtnClass = `${baseBtnClass} bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200 hover:text-gray-900 hover:border-gray-400`
 
 const ConfirmDialog = ({ message, onConfirm, onCancel }: Props) => {
     return (

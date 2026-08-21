@@ -2,7 +2,7 @@
 
 :root {
   --primary: #dc2626;
-  --primary-hover: #b91c1c;
+  --primary-hover: #ce4e4e;
   --primary-light: #fef2f2;
   --primary-border: #fca5a5;
   --primary-muted: #f87171;
@@ -70,18 +70,53 @@ body {
 }
 
 @keyframes errorAnimation {
-  0%, 100% { transform: translateX(0); color: var(--danger); }
-  10% { transform: translateX(-6px); }
-  20% { transform: translateX(6px); }
-  30% { transform: translateX(-6px); }
-  40% { transform: translateX(0); color: var(--primary-deep); }
 
-  70% { color: var(--danger); }
+  0%,
+  100% {
+    transform: translateX(0);
+    color: var(--danger);
+  }
 
-  100% { color: var(--foreground); }
+  10% {
+    transform: translateX(-6px);
+  }
+
+  20% {
+    transform: translateX(6px);
+  }
+
+  30% {
+    transform: translateX(-6px);
+  }
+
+  40% {
+    transform: translateX(0);
+    color: var(--primary-deep);
+  }
+
+  70% {
+    color: var(--danger);
+  }
+
+  100% {
+    color: var(--foreground);
+  }
 }
 
 .animate-error {
   animation: errorAnimation 0.8s ease-out;
   display: inline-block;
+}
+
+.hover-lift {
+  transition: all 200ms ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.12);
+}
+
+.hover-lift:active {
+  transform: translateY(0);
 }

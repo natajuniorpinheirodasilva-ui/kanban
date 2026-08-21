@@ -90,7 +90,7 @@ const allPossibleCards: Card[] = [
 
 export default function SignIn() {
     const router = useRouter()
-    
+
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [rememberMe, setRememberMe] = useState<boolean>(false)
@@ -138,7 +138,7 @@ export default function SignIn() {
                 setUnexpectedError(true)
                 return
             }
-            
+
             router.push("/board")
         } catch (error) {
             setUnexpectedError(true)
@@ -259,8 +259,8 @@ export default function SignIn() {
         <div className="flex w-full min-h-screen">
             {/* Left side */}
             <div className="hidden lg:flex w-1/2 bg-gray-50 relative overflow-hidden items-center justify-center p-6 select-none border-r border-gray-200">
-                <div className="absolute top-6 text-xs text-gray-500 font-medium flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm z-20">
-                    <Lightbulb className="w-4 h-4 text-primary-muted" />
+                <div className="group absolute top-6 text-xs text-gray-500 font-medium flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm z-20 pulse hover-lift  hover:bg-primary hover:text-white">
+                    <Lightbulb className="w-4 h-4 text-primary-muted group-hover:text-white" />
                     <span>Drag cards to reorder</span>
                 </div>
 
@@ -322,10 +322,9 @@ export default function SignIn() {
                                                 transition-all duration-200
                                                 p-2.5 rounded-lg relative overflow-hidden
                                                 ${cardStyle}
-                                                ${
-                                                    draggedItem?.cardId === card.id
-                                                        ? "opacity-30 scale-95"
-                                                        : "opacity-100"
+                                                ${draggedItem?.cardId === card.id
+                                                    ? "opacity-30 scale-95"
+                                                    : "opacity-100"
                                                 }
                                             `}
                                         >
@@ -349,11 +348,10 @@ export default function SignIn() {
                                             </div>
 
                                             <h4
-                                                className={`text-xs font-semibold mt-1.5 leading-snug ${
-                                                    card.completed
-                                                        ? "text-gray-500 line-through"
-                                                        : "text-black"
-                                                }`}
+                                                className={`text-xs font-semibold mt-1.5 leading-snug ${card.completed
+                                                    ? "text-gray-500 line-through"
+                                                    : "text-black"
+                                                    }`}
                                             >
                                                 {card.title}
                                             </h4>
@@ -397,8 +395,8 @@ export default function SignIn() {
             {/* Right side */}
             <div className="relative flex flex-col justify-center items-center w-full lg:w-1/2 bg-linear-to-br from-primary-dark via-primary to-primary-deep overflow-hidden p-6 xl:p-8">
                 <form
-                onSubmit={handleSignIn}
-                className="relative z-10 flex flex-col items-center w-full max-w-sm sm:max-w-md bg-white/95 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 rounded-3xl"
+                    onSubmit={handleSignIn}
+                    className="relative z-10 flex flex-col items-center w-full max-w-sm sm:max-w-md bg-white/95 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 rounded-3xl"
                 >
                     <h1 className="text-3xl font-bold text-black">
                         Sign in
@@ -439,7 +437,7 @@ export default function SignIn() {
                         </div>
 
                         <Button
-                        type="submit"
+                            type="submit"
                         >
                             Sign in
                         </Button>
@@ -454,9 +452,9 @@ export default function SignIn() {
                             Sign up
                         </Link>
                     </p>
-                    
+
                     {(signInError || unexpectedError) && (
-                        <div className="w-3/4 h-px bg-linear-to-r from-transparent via-danger to-transparent mt-2"/> 
+                        <div className="w-3/4 h-px bg-linear-to-r from-transparent via-danger to-transparent mt-2" />
                     )}
 
                     {signInError && (

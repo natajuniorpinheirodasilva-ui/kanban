@@ -90,7 +90,7 @@ const allPossibleCards: Card[] = [
 
 export default function SignUp() {
     const router = useRouter()
-    
+
     const [name, setName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -99,7 +99,7 @@ export default function SignUp() {
     const [signUpError, setSignUpError] = useState<boolean>(false)
     const [usedEmail, setUsedEmail] = useState<boolean>(false)
     const [unexpectedError, setUnexpectedError] = useState<boolean>(false)
-    
+
     async function handleSignUp(event: React.SubmitEvent) {
         event.preventDefault()
 
@@ -127,7 +127,7 @@ export default function SignUp() {
                 return
             }
 
-            if(response.status === 409) {
+            if (response.status === 409) {
                 setUsedEmail(true)
                 return
             }
@@ -262,8 +262,8 @@ export default function SignUp() {
         <div className="flex w-full min-h-screen">
             {/* Left side */}
             <div className="hidden lg:flex w-1/2 bg-gray-50 relative overflow-hidden items-center justify-center p-6 select-none border-r border-gray-200">
-                <div className="absolute top-6 text-xs text-gray-500 font-medium flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm z-20">
-                    <Lightbulb className="w-4 h-4 text-primary-muted" />
+                <div className="group absolute top-6 text-xs text-gray-500 font-medium flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm z-20 pulse hover-lift  hover:bg-primary hover:text-white">
+                    <Lightbulb className="w-4 h-4 text-primary-muted group-hover:text-white" />
                     <span>Drag cards to reorder</span>
                 </div>
 
@@ -325,10 +325,9 @@ export default function SignUp() {
                                                 transition-all duration-200
                                                 p-2.5 rounded-lg relative overflow-hidden
                                                 ${cardStyle}
-                                                ${
-                                                    draggedItem?.cardId === card.id
-                                                        ? "opacity-30 scale-95"
-                                                        : "opacity-100"
+                                                ${draggedItem?.cardId === card.id
+                                                    ? "opacity-30 scale-95"
+                                                    : "opacity-100"
                                                 }
                                             `}
                                         >
@@ -352,11 +351,10 @@ export default function SignUp() {
                                             </div>
 
                                             <h4
-                                                className={`text-xs font-semibold mt-1.5 leading-snug ${
-                                                    card.completed
-                                                        ? "text-gray-500 line-through"
-                                                        : "text-black"
-                                                }`}
+                                                className={`text-xs font-semibold mt-1.5 leading-snug ${card.completed
+                                                    ? "text-gray-500 line-through"
+                                                    : "text-black"
+                                                    }`}
                                             >
                                                 {card.title}
                                             </h4>
@@ -399,7 +397,7 @@ export default function SignUp() {
 
             {/* Right side */}
             <div className="relative flex flex-col justify-center items-center w-full lg:w-1/2 bg-linear-to-br from-primary-dark via-primary to-primary-deep overflow-hidden p-6 xl:p-8">
-                <form 
+                <form
                     onSubmit={handleSignUp}
                     className="relative z-10 flex flex-col items-center w-full max-w-sm sm:max-w-md bg-white/95 backdrop-blur-xl border border-white/20 shadow-2xl p-6 sm:p-10 rounded-3xl"
                 >
@@ -417,7 +415,7 @@ export default function SignUp() {
                             placeholder="Name"
                             onChange={(e) => setName(e.target.value)}
                         />
-                        
+
                         <Input
                             type="email"
                             placeholder="E-mail"
@@ -461,9 +459,9 @@ export default function SignUp() {
                             Sign in
                         </Link>
                     </p>
-                    
+
                     {(signUpError || unexpectedError || usedEmail) && (
-                        <div className="w-3/4 h-px bg-linear-to-r from-transparent via-danger to-transparent mb-3 mt-3"/> 
+                        <div className="w-3/4 h-px bg-linear-to-r from-transparent via-danger to-transparent mb-3 mt-3" />
                     )}
 
                     {signUpError && (
