@@ -21,7 +21,7 @@ const ConfirmDialog = ({ message, onConfirm, onCancel }: Props) => {
                         {message}
                     </p>
                     <p className="text-xs text-gray-500 font-normal">
-                        This action is permanent and cannot be undone..
+                        This action is permanent and cannot be undone.
                     </p>
                 </div>
 
