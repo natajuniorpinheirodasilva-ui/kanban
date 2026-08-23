@@ -37,7 +37,7 @@ const ConfirmDialog = ({ message, onConfirm, onCancel, hasError }: Props) => {
                 {hasError && (
                     <div className="w-full text-center">
                         <div className="mx-auto mb-2 h-px w-3/4 bg-linear-to-r from-transparent via-danger to-transparent" />
-                        <p className="text-sm"> Error, try again later </p>
+                        <p className="text-xs"> Error, try again later </p>
                     </div>
                 )}
             </div>
