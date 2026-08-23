@@ -48,20 +48,20 @@ function Kanban({ board }: Props) {
         if (!columnIdToDelete) return
 
         try {
-        const response = await fetch(`/api/columns/${columnIdToDelete}`, {
-            method: "DELETE",
-        })
-        if (!response.ok) {
-            setColumnDeleteError(true)
-            return
-        }
+            const response = await fetch(`/api/columns/${columnIdToDelete}`, {
+                method: "DELETE",
+            })
+            if (!response.ok) {
+                setColumnDeleteError(true)
+                return
+            }
 
-        setColumns(columns.filter((column) => column.id !== columnIdToDelete))
-        setCards(cards.filter((card) => card.columnId !== columnIdToDelete))
-        setColumnDeleteAlert(false)
-        setColumnIdToDelete(null)
+            setColumns(columns.filter((column) => column.id !== columnIdToDelete))
+            setCards(cards.filter((card) => card.columnId !== columnIdToDelete))
+            setColumnDeleteAlert(false)
+            setColumnIdToDelete(null)
         } catch (error) {
-        setColumnDeleteError(true)
+            setColumnDeleteError(true)
         }
     }
 
@@ -69,63 +69,63 @@ function Kanban({ board }: Props) {
         if (!cardIdToDelete) return
 
         try {
-        const response = await fetch(`/api/cards/${cardIdToDelete}`, {
-            method: "DELETE",
-        })
-        if (!response.ok) {
-            setCardDeleteError(true)
-            return
-        }
+            const response = await fetch(`/api/cards/${cardIdToDelete}`, {
+                method: "DELETE",
+            })
+            if (!response.ok) {
+                setCardDeleteError(true)
+                return
+            }
 
-        setCards(cards.filter((card) => card.id !== cardIdToDelete))
-        setCardDeleteAlert(false)
-        setCardIdToDelete(null)
+            setCards(cards.filter((card) => card.id !== cardIdToDelete))
+            setCardDeleteAlert(false)
+            setCardIdToDelete(null)
         } catch (error) {
-        setCardDeleteError(true)
+            setCardDeleteError(true)
         }
     }
 
     async function handleColumnTitleSave(columnId: string) {
         const trimmedTitle = editingColumnTitle.trim()
         if (!trimmedTitle) {
-        setEditingColumnId(null)
-        return
+            setEditingColumnId(null)
+            return
         }
 
         setColumns(columns.map((col) => (col.id === columnId ? { ...col, title: trimmedTitle } : col)))
         setEditingColumnId(null)
 
         try {
-        const response = await fetch(`/api/columns/${columnId}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: trimmedTitle }),
-        })
-        if (!response.ok) setColumnDeleteError(true)
+            const response = await fetch(`/api/columns/${columnId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title: trimmedTitle }),
+            })
+            if (!response.ok) setColumnDeleteError(true)
         } catch (error) {
-        setColumnDeleteError(true)
+            setColumnDeleteError(true)
         }
     }
 
     async function handleCardTitleSave(cardId: string) {
         const trimmedTitle = editingCardTitle.trim()
         if (!trimmedTitle) {
-        setEditingCardId(null)
-        return
+            setEditingCardId(null)
+            return
         }
 
         setCards(cards.map((card) => (card.id === cardId ? { ...card, title: trimmedTitle } : card)))
         setEditingCardId(null)
 
         try {
-        const response = await fetch(`/api/cards/${cardId}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: trimmedTitle }),
-        })
-        if (!response.ok) setCardDeleteError(true)
+            const response = await fetch(`/api/cards/${cardId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title: trimmedTitle }),
+            })
+            if (!response.ok) setCardDeleteError(true)
         } catch (error) {
-        setCardDeleteError(true)
+            setCardDeleteError(true)
         }
     }
 
@@ -136,27 +136,27 @@ function Kanban({ board }: Props) {
         if (!draggedCard) return
 
         const columnCards = cards
-        .filter((c) => c.columnId === targetColumnId && c.id !== draggedCardId)
-        .sort((a, b) => a.position - b.position)
+            .filter((c) => c.columnId === targetColumnId && c.id !== draggedCardId)
+            .sort((a, b) => a.position - b.position)
 
         const lastCard = columnCards[columnCards.length - 1]
         const newPosition = lastCard ? lastCard.position + 100 : 100
 
         setCards(
-        cards.map((c) =>
-            c.id === draggedCardId ? { ...c, columnId: targetColumnId, position: newPosition } : c
-        )
+            cards.map((c) =>
+                c.id === draggedCardId ? { ...c, columnId: targetColumnId, position: newPosition } : c
+            )
         )
 
         try {
-        const response = await fetch(`/api/cards/${draggedCardId}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ columnId: targetColumnId, position: newPosition }),
-        })
-        if (!response.ok) setCardDeleteError(true)
+            const response = await fetch(`/api/cards/${draggedCardId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ columnId: targetColumnId, position: newPosition }),
+            })
+            if (!response.ok) setCardDeleteError(true)
         } catch (error) {
-        setCardDeleteError(true)
+            setCardDeleteError(true)
         }
 
         setDraggedCardId(null)
@@ -164,8 +164,8 @@ function Kanban({ board }: Props) {
 
     async function handleColumnDrop(targetColumnId: string) {
         if (!draggedColumnId || draggedColumnId === targetColumnId) {
-        setDraggedColumnId(null)
-        return
+            setDraggedColumnId(null)
+            return
         }
 
         const draggedIndex = columns.findIndex((c) => c.id === draggedColumnId)
@@ -178,9 +178,9 @@ function Kanban({ board }: Props) {
         const insertAt = draggedIndex < targetIndex ? newTargetIndex + 1 : newTargetIndex
 
         const reordered = [
-        ...withoutDragged.slice(0, insertAt),
-        draggedColumn,
-        ...withoutDragged.slice(insertAt),
+            ...withoutDragged.slice(0, insertAt),
+            draggedColumn,
+            ...withoutDragged.slice(insertAt),
         ]
 
         const repositioned = reordered.map((c, index) => ({ ...c, position: (index + 1) * 100 }))
@@ -189,117 +189,119 @@ function Kanban({ board }: Props) {
         setDraggedColumnId(null)
 
         try {
-        const response = await fetch(`/api/columns/${draggedColumn.id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ position: repositioned.find((c) => c.id === draggedColumn.id)!.position }),
-        })
-        if (!response.ok) setColumnDeleteError(true)
+            const response = await fetch(`/api/columns/${draggedColumn.id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ position: repositioned.find((c) => c.id === draggedColumn.id)!.position }),
+            })
+            if (!response.ok) setColumnDeleteError(true)
         } catch (error) {
-        setColumnDeleteError(true)
+            setColumnDeleteError(true)
         }
     }
 
     return (
         <div className="flex gap-5 p-6 overflow-x-auto items-start justify-start min-h-screen bg-gray-50/50">
-        {columns.map((column) => {
-            const columnCards = cards.filter((card) => card.columnId === column.id)
-            const isDragOver = dragOverColumnId === column.id && Boolean(draggedColumnId || draggedCardId)
+            {columns.map((column) => {
+                const columnCards = cards.filter((card) => card.columnId === column.id)
+                const isDragOver = dragOverColumnId === column.id && Boolean(draggedColumnId || draggedCardId)
 
-            return (
-            <KanbanColumn
-                key={column.id}
-                column={column}
-                cards={columnCards}
-                columns={columns}
-                isDragOver={isDragOver}
-                isColumnDragging={draggedColumnId === column.id}
-                draggedCardId={draggedCardId}
-                onDragOverColumn={setDragOverColumnId}
-                onDropOnColumn={(colId) => {
-                setDragOverColumnId(null)
-                if (draggedColumnId) {
-                    handleColumnDrop(colId)
-                } else {
-                    handleCardDrop(colId)
-                }
-                }}
-                onColumnDragStart={setDraggedColumnId}
-                onColumnDragEnd={() => setDraggedColumnId(null)}
-                editingColumnId={editingColumnId}
-                editingColumnTitle={editingColumnTitle}
-                onStartEditColumn={(col) => {
-                setEditingColumnId(col.id)
-                setEditingColumnTitle(col.title)
-                }}
-                onEditColumnTitleChange={setEditingColumnTitle}
-                onSaveColumnTitle={handleColumnTitleSave}
-                onCancelEditColumn={() => setEditingColumnId(null)}
-                onDeleteColumnClick={(colId) => {
-                setColumnIdToDelete(colId)
-                setColumnDeleteAlert(true)
-                }}
-                editingCardId={editingCardId}
-                editingCardTitle={editingCardTitle}
-                onCardDragStart={setDraggedCardId}
-                onCardDragEnd={() => setDraggedCardId(null)}
-                onStartEditCard={(card) => {
-                setEditingCardId(card.id)
-                setEditingCardTitle(card.title)
-                }}
-                onEditCardTitleChange={setEditingCardTitle}
-                onSaveCardTitle={handleCardTitleSave}
-                onCancelEditCard={() => setEditingCardId(null)}
-                onDeleteCardClick={(cardId) => {
-                setCardIdToDelete(cardId)
-                setCardDeleteAlert(true)
-                }}
-                activeColumnForCard={activeColumnForCard}
-                onActivateNewCardForm={setActiveColumnForCard}
-                onCancelNewCardForm={() => setActiveColumnForCard(null)}
-                onCardCreate={handleCardCreate}
-            />
-            )
-        })}
+                return (
+                    <KanbanColumn
+                        key={column.id}
+                        column={column}
+                        cards={columnCards}
+                        columns={columns}
+                        isDragOver={isDragOver}
+                        isColumnDragging={draggedColumnId === column.id}
+                        draggedCardId={draggedCardId}
+                        onDragOverColumn={setDragOverColumnId}
+                        onDropOnColumn={(colId) => {
+                            setDragOverColumnId(null)
+                            if (draggedColumnId) {
+                                handleColumnDrop(colId)
+                            } else {
+                                handleCardDrop(colId)
+                            }
+                        }}
+                        onColumnDragStart={setDraggedColumnId}
+                        onColumnDragEnd={() => setDraggedColumnId(null)}
+                        editingColumnId={editingColumnId}
+                        editingColumnTitle={editingColumnTitle}
+                        onStartEditColumn={(col) => {
+                            setEditingColumnId(col.id)
+                            setEditingColumnTitle(col.title)
+                        }}
+                        onEditColumnTitleChange={setEditingColumnTitle}
+                        onSaveColumnTitle={handleColumnTitleSave}
+                        onCancelEditColumn={() => setEditingColumnId(null)}
+                        onDeleteColumnClick={(colId) => {
+                            setColumnIdToDelete(colId)
+                            setColumnDeleteAlert(true)
+                        }}
+                        editingCardId={editingCardId}
+                        editingCardTitle={editingCardTitle}
+                        onCardDragStart={setDraggedCardId}
+                        onCardDragEnd={() => setDraggedCardId(null)}
+                        onStartEditCard={(card) => {
+                            setEditingCardId(card.id)
+                            setEditingCardTitle(card.title)
+                        }}
+                        onEditCardTitleChange={setEditingCardTitle}
+                        onSaveCardTitle={handleCardTitleSave}
+                        onCancelEditCard={() => setEditingCardId(null)}
+                        onDeleteCardClick={(cardId) => {
+                            setCardIdToDelete(cardId)
+                            setCardDeleteAlert(true)
+                        }}
+                        activeColumnForCard={activeColumnForCard}
+                        onActivateNewCardForm={setActiveColumnForCard}
+                        onCancelNewCardForm={() => setActiveColumnForCard(null)}
+                        onCardCreate={handleCardCreate}
+                    />
+                )
+            })}
 
-        {newColumnButton ? (
-            <NewColumnForm
-            boardId={board.id}
-            onCreate={handleColumnCreate}
-            onCancel={() => setNewColumnButton(false)}
-            />
-        ) : (
-            <button
-            className="w-auto shrink-0 bg-black/5 hover:bg-black/10 text-black/70 font-medium py-3 px-4 rounded-xl text-left transition cursor-pointer"
-            onClick={() => setNewColumnButton(true)}
-            >
-            + Add column
-            </button>
-        )}
+            {newColumnButton ? (
+                <NewColumnForm
+                    boardId={board.id}
+                    onCreate={handleColumnCreate}
+                    onCancel={() => setNewColumnButton(false)}
+                />
+            ) : (
+                <button
+                    className="w-auto shrink-0 bg-black/5 hover:bg-black/10 text-black/70 font-medium py-3 px-4 rounded-xl text-left transition cursor-pointer"
+                    onClick={() => setNewColumnButton(true)}
+                >
+                    + Add column
+                </button>
+            )}
 
-        {cardDeleteAlert && (
-            <ConfirmDialog
-            message="Delete this card?"
-            onConfirm={handleCardDelete}
-            onCancel={() => {
-                setCardDeleteAlert(false)
-                setCardIdToDelete(null)
-            }}
-            />
-        )}
+            {cardDeleteAlert && (
+                <ConfirmDialog
+                    message="Delete this card?"
+                    hasError={cardDeleteError}
+                    onConfirm={handleCardDelete}
+                    onCancel={() => {
+                        setCardDeleteAlert(false)
+                        setCardIdToDelete(null)
+                    }}
+                />
+            )}
 
-        {columnDeleteAlert && (
-            <ConfirmDialog
-            message="Delete this column?"
-            onConfirm={handleColumnDelete}
-            onCancel={() => {
-                setColumnDeleteAlert(false)
-                setColumnIdToDelete(null)
-            }}
-            />
-        )}
+            {columnDeleteAlert && (
+                <ConfirmDialog
+                    message="Delete this column?"
+                    hasError={columnDeleteError}
+                    onConfirm={handleColumnDelete}
+                    onCancel={() => {
+                        setColumnDeleteAlert(false)
+                        setColumnIdToDelete(null)
+                    }}
+                />
+            )}
         </div>
     )
-    }
+}
 
 export default Kanban
