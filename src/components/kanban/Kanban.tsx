@@ -201,8 +201,25 @@ function Kanban({ board }: Props) {
     }
 
     return (
-        <div className="flex gap-5 p-6 overflow-x-auto items-start justify-start min-h-screen bg-gray-50/50">
-            {columns.map((column) => {
+        <section className="mx-5 mt-4 min-h-[80vh] overflow-hidden rounded-2xl border border-black/10 border-t-2 border-t-primary bg-white/70 shadow-sm backdrop-blur-sm">
+            <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
+                <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Workspace</p>
+                    <h1 className="text-lg font-semibold text-foreground">{board.title}</h1>
+                </div>
+
+                <button
+                    type="button"
+                    disabled={newColumnButton}
+                    onClick={() => setNewColumnButton(true)}
+                    className="hover-lift rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                >
+                    + New column
+                </button>
+            </div>
+
+            <div className="flex items-start justify-start gap-5 overflow-x-auto p-6">
+                {columns.map((column) => {
                 const columnCards = cards.filter((card) => card.columnId === column.id)
                 const isDragOver = dragOverColumnId === column.id && Boolean(draggedColumnId || draggedCardId)
 
@@ -260,22 +277,16 @@ function Kanban({ board }: Props) {
                         onCardCreate={handleCardCreate}
                     />
                 )
-            })}
+                })}
 
-            {newColumnButton ? (
-                <NewColumnForm
-                    boardId={board.id}
-                    onCreate={handleColumnCreate}
-                    onCancel={() => setNewColumnButton(false)}
-                />
-            ) : (
-                <button
-                    className="w-auto shrink-0 bg-black/5 hover:bg-black/10 text-black/70 font-medium py-3 px-4 rounded-xl text-left transition cursor-pointer"
-                    onClick={() => setNewColumnButton(true)}
-                >
-                    + Add column
-                </button>
-            )}
+                {newColumnButton && (
+                    <NewColumnForm
+                        boardId={board.id}
+                        onCreate={handleColumnCreate}
+                        onCancel={() => setNewColumnButton(false)}
+                    />
+                )}
+            </div>
 
             {cardDeleteAlert && (
                 <ConfirmDialog
@@ -300,7 +311,7 @@ function Kanban({ board }: Props) {
                     }}
                 />
             )}
-        </div>
+        </section>
     )
 }
 

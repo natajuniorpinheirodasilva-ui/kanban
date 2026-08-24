@@ -51,48 +51,48 @@ const NewColumnForm = ({ boardId, onCreate, onCancel }: Props) => {
     }
 
     return (
-    <form
-    className="flex flex-col w-72 h-auto self-start gap-2 bg-gray-100 border border-black/10 rounded-xl p-4 shadow-sm shrink-0"
-    onSubmit={handleSubmit} >
-        <input
-        className="border border-black/20 rounded p-2 text-sm bg-white"
-        placeholder="Column title..."
-        value={title}
-        type="text"
-        autoFocus
-        onChange={(e) => setTitle(e.target.value)} />
+        <form
+            className="flex flex-col w-72 h-auto self-start gap-2 bg-gray-100 border border-black/10 rounded-xl p-4 shadow-sm shrink-0"
+            onSubmit={handleSubmit} >
+            <input
+                className="border border-black/20 rounded p-2 text-sm bg-white"
+                placeholder="Column title..."
+                value={title}
+                type="text"
+                autoFocus
+                onChange={(e) => setTitle(e.target.value)} />
 
-        <div className="flex items-center gap-2 mt-1">
-            <button
-            className="bg-black text-white text-sm font-medium rounded-lg px-3 py-1.5 hover:bg-black/80 cursor-pointer transition"
-            type="submit">
-                Add Column
-            </button>
-            <button
-            className="text-gray-500 hover:text-black text-sm font-medium rounded-lg px-3 py-1.5 hover:bg-black/5 transition"
-            type="button"
-            onClick={onCancel}>
-                Cancel
-            </button>
-        </div>
+            <div className="flex items-center gap-2 mt-1">
+                <button
+                    className="bg-primary text-white text-sm font-medium rounded-lg px-3 py-1.5 hover:bg-primary/80 cursor-pointer transition hover-lift"
+                    type="submit">
+                    Add Column
+                </button>
+                <button
+                    className="border-black/10 border text-gray-500 hover:text-black text-sm font-medium rounded-lg px-3 py-1.5 hover:bg-black/5 transition hover-lift"
+                    type="button"
+                    onClick={onCancel}>
+                    Cancel
+                </button>
+            </div>
 
-        { apiError &&
-            <p
-            key={`api-${errorTrigger}`}
-            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1 text-danger border-danger-border">
-                API Error, try again later.
-            </p>
-        }
+            {apiError &&
+                <p
+                    key={`api-${errorTrigger}`}
+                    className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1 text-danger border-danger-border">
+                    API Error, try again later.
+                </p>
+            }
 
-        { titleError &&
-            <p
-            key={`title-${errorTrigger}`}
-            className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1 text-danger border-danger-border">
-                Title error.
-            </p>
-        }
-    </form>
-  )
+            {titleError &&
+                <p
+                    key={`title-${errorTrigger}`}
+                    className="border-b rounded shadow border-r animate-error font-semibold text-sm mt-1 leading-tight pt-1 text-danger border-danger-border">
+                    Title error.
+                </p>
+            }
+        </form>
+    )
 }
 
 export default NewColumnForm

@@ -23,8 +23,10 @@ export default async function Home() {
 
   return (
     <div>
-      <NavBar userName={user.name} />
-      <Kanban board={board} />
+      <div className="">
+        <NavBar userName={user.name} />
+        <Kanban board={board} />
+      </div>
     </div>
   )
 }
