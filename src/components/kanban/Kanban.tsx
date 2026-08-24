@@ -5,13 +5,18 @@ import { BoardWithColumnsAndCards } from "@/lib/board"
 import NewColumnForm from "./NewColumnForm"
 import ConfirmDialog from "@/components/ui/ConfirmDialog"
 import KanbanColumn from "./KanbanColumn"
+import WorkspaceSwitcher from "./WorkspaceSwitcher"
 import { useState } from "react"
 
 type Props = {
     board: BoardWithColumnsAndCards;
+    workspaces: {
+        id: string;
+        title: string;
+    }[];
 }
 
-function Kanban({ board }: Props) {
+function Kanban({ board, workspaces }: Props) {
     const [cards, setCards] = useState<Card[]>(board.columns.flatMap((column) => column.cards))
     const [cardDeleteError, setCardDeleteError] = useState<boolean>(false)
     const [cardDeleteAlert, setCardDeleteAlert] = useState<boolean>(false)
@@ -201,12 +206,12 @@ function Kanban({ board }: Props) {
     }
 
     return (
-        <section className="mx-5 mt-4 min-h-[80vh] overflow-hidden rounded-2xl border border-black/10 border-t-2 border-t-primary bg-white/70 shadow-sm backdrop-blur-sm">
-            <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
-                <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Workspace</p>
-                    <h1 className="text-lg font-semibold text-foreground">{board.title}</h1>
-                </div>
+        <section className="relative z-0 mx-5 mt-4 min-h-[80vh] overflow-hidden rounded-2xl border border-black/10 border-t-2 border-t-primary bg-white/70 shadow-sm backdrop-blur-sm">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 px-6 py-4">
+                <WorkspaceSwitcher
+                    workspaces={workspaces}
+                    activeWorkspaceId={board.id}
+                />
 
                 <button
                     type="button"

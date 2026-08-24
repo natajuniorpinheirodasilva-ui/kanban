@@ -50,13 +50,13 @@ Protected requests validate the cookie token, database session, expiration date,
 
 ## User-Specific Boards
 
-Each account receives an initial board during registration with three columns:
+Each account receives an initial workspace during registration with three columns:
 
 - To Do
 - In Progress
 - Done
 
-The `/board` page loads only the board that belongs to the authenticated user. Card and column endpoints also verify resource ownership before creating, editing, moving, or deleting data.
+Users can create additional workspaces and switch between them from the board header. Each workspace has its own URL and is loaded only when it belongs to the authenticated user. Card and column endpoints also verify resource ownership before creating, editing, moving, or deleting data.
 
 ![User1](public/user1.png)
 
@@ -158,6 +158,12 @@ PATCH   /api/cards/[id]
 DELETE  /api/cards/[id]
 ```
 
+### Workspaces
+
+```text
+POST    /api/boards
+```
+
 ### Columns
 
 ```text
@@ -166,7 +172,7 @@ PATCH   /api/columns/[id]
 DELETE  /api/columns/[id]
 ```
 
-All card and column routes require a valid session and verify that the requested resource belongs to the authenticated user.
+All workspace, card, and column routes require a valid session and verify that the requested resource belongs to the authenticated user.
 
 ## Database
 
@@ -243,8 +249,6 @@ Open `http://localhost:3000/signup` to create an account.
 
 ## Known Limitations
 
-- Each user currently has one initial board.
-- Multi-board creation and switching are not implemented.
 - Cards moved to another column are appended instead of inserted at an exact drop position.
 - Position values are not automatically rebalanced after many reorder operations.
 - The current drag-and-drop implementation has limited touch and keyboard support.
@@ -255,7 +259,6 @@ Open `http://localhost:3000/signup` to create an account.
 - Adopt dnd-kit for improved sorting, touch support, and keyboard accessibility
 - Support exact card placement within and between columns
 - Add automatic position rebalancing
-- Add multiple boards per user
 - Add profile and settings options to the user menu
 - Add automatic cleanup for expired sessions
 
