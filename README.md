@@ -2,11 +2,11 @@
 
 A full-stack Kanban board built with Next.js, React, TypeScript, Prisma, and SQLite.
 
-The application allows users to create an account, manage their own board, and organize cards and columns through a responsive drag-and-drop interface. All changes are persisted through REST-style Route Handlers, and every board operation is scoped to the authenticated user.
+The application allows users to create an account, manage multiple workspaces, and organize cards and columns through a responsive drag-and-drop interface. All changes are persisted through REST-style Route Handlers, and every board operation is scoped to the authenticated user.
 
 ## Preview
 
-![Preview](/public/preview.png)
+![Preview](public/preview.png)
 
 ## Features
 
@@ -17,6 +17,9 @@ The application allows users to create an account, manage their own board, and o
 - Optional persistent login with **Remember me**
 - Protected board access
 - User-specific boards and data isolation
+- Create, switch between, and delete workspaces
+- Dedicated URL for each workspace
+- Protection against deleting the last workspace
 - User menu with logout
 - Session invalidation during logout
 - Create, edit, and delete columns
@@ -56,7 +59,15 @@ Each account receives an initial workspace during registration with three column
 - In Progress
 - Done
 
-Users can create additional workspaces and switch between them from the board header. Each workspace has its own URL and is loaded only when it belongs to the authenticated user. Card and column endpoints also verify resource ownership before creating, editing, moving, or deleting data.
+Users can create additional workspaces, switch between them from the board header, and remove workspaces they no longer need. Each workspace has its own `/board/[id]` URL and is loaded only when it belongs to the authenticated user.
+
+Deleting a workspace also removes its columns and cards through cascading deletes. The application prevents users from deleting their final workspace and displays contextual feedback for expected and unexpected errors. After a successful deletion, the user is redirected to another available workspace.
+
+Card and column endpoints also verify resource ownership before creating, editing, moving, or deleting data.
+
+[coloque print do seletor e dos controles de workspace]
+
+[coloque print do erro ao tentar excluir o último workspace]
 
 ![User1](public/user1.png)
 
@@ -64,7 +75,7 @@ Users can create additional workspaces and switch between them from the board he
 
 ## User Menu and Logout
 
-The navbar includes a user menu that displays the current user's name and provides the logout action as showed above.
+The navbar includes a user menu that displays the current user's name and provides the logout action.
 
 Logging out removes the current session from the database, deletes the session cookie, and redirects the user to the authentication area. The menu also closes when clicking outside it or pressing `Escape`.
 
@@ -140,6 +151,15 @@ prisma/
 └── schema.prisma
 ```
 
+Workspace-related routes and components include:
+
+```text
+src/app/api/boards/
+src/app/api/boards/[id]/
+src/app/board/[id]/
+src/components/kanban/WorkspaceSwitcher.tsx
+```
+
 ## API Routes
 
 ### Authentication
@@ -162,6 +182,7 @@ DELETE  /api/cards/[id]
 
 ```text
 POST    /api/boards
+DELETE  /api/boards/[id]
 ```
 
 ### Columns
