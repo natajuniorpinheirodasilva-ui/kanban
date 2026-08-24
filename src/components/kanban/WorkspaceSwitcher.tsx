@@ -14,12 +14,48 @@ type Props = {
     activeWorkspaceId: string;
 }
 
+type DeleteError = 'lastWorkspace' | 'unexpected' | null
+
 function WorkspaceSwitcher({ workspaces, activeWorkspaceId }: Props) {
     const router = useRouter()
     const [isCreating, setIsCreating] = useState(false)
     const [title, setTitle] = useState('')
     const [hasError, setHasError] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
+    const [deleteError, setDeleteError] = useState<DeleteError>(null)
+
+    async function handleWorkspaceDelete() {
+        setDeleteError(null)
+        setIsDeleting(true)
+
+        try {
+            const response = await fetch(
+                `/api/boards/${activeWorkspaceId}`,
+                {
+                    method: "DELETE"
+                }
+            )
+            if (!response.ok) {
+                const data = await response.json().catch(() => null)
+
+                if (response.status === 409 || data?.error === 'Cannot delete the last workspace.') {
+                    setDeleteError('lastWorkspace')
+                } else {
+                    setDeleteError('unexpected')
+                }
+
+                setIsDeleting(false)
+                return
+            }
+
+            const data = await response.json()
+            router.replace(`/board/${data.nextWorkspaceId}`)
+        } catch {
+            setDeleteError('unexpected')
+            setIsDeleting(false)
+        }
+    }
 
     function handleWorkspaceChange(workspaceId: string) {
         if (workspaceId !== activeWorkspaceId) {
@@ -104,29 +140,58 @@ function WorkspaceSwitcher({ workspaces, activeWorkspaceId }: Props) {
     }
 
     return (
-        <div className="flex flex-wrap items-end gap-3">
-            <label className="flex flex-col gap-1">
-                <span className="text-xs font-medium uppercase tracking-wider text-gray-500">Workspace</span>
-                <select
-                    value={activeWorkspaceId}
-                    onChange={(event) => handleWorkspaceChange(event.target.value)}
-                    className="min-w-44 rounded-lg border border-black/15 bg-white px-3 py-2 text-sm font-semibold text-foreground outline-none focus:border-primary cursor-pointer"
-                >
-                    {workspaces.map((workspace) => (
-                        <option key={workspace.id} value={workspace.id}>
-                            {workspace.title}
-                        </option>
-                    ))}
-                </select>
-            </label>
+        <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap items-end gap-3">
+                <label className="flex flex-col gap-1">
+                    <span className="text-xs font-medium uppercase tracking-wider text-gray-500">Workspace</span>
+                    <select
+                        value={activeWorkspaceId}
+                        onChange={(event) => handleWorkspaceChange(event.target.value)}
+                        className="min-w-44 rounded-lg border border-black/15 bg-white px-3 py-2 text-sm font-semibold text-foreground outline-none focus:border-primary cursor-pointer"
+                    >
+                        {workspaces.map((workspace) => (
+                            <option key={workspace.id} value={workspace.id}>
+                                {workspace.title}
+                            </option>
+                        ))}
+                    </select>
+                </label>
 
-            <button
-                type="button"
-                onClick={() => setIsCreating(true)}
-                className="hover-lift rounded-lg border border-primary-border bg-primary-light px-3 py-2 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary hover:text-white cursor-pointer"
-            >
-                + New workspace
-            </button>
+                <button
+                    type="button"
+                    onClick={() => setIsCreating(true)}
+                    className="hover-lift rounded-lg border border-primary-border bg-primary-light px-3 py-2 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary hover:text-white cursor-pointer"
+                >
+                    New workspace
+                </button>
+                <button
+                    type="button"
+                    disabled={isDeleting}
+                    onClick={handleWorkspaceDelete}
+                    className="hover-lift rounded-lg border border-primary-border bg-primary-light px-3 py-2 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                >
+                    {isDeleting ? 'Deleting...' : 'Remove this workspace'}
+                </button>
+            </div>
+
+            {deleteError && (
+                <div className="relative rounded-lg border border-danger-border bg-danger-light px-9 py-2 text-center text-xs font-medium text-danger shadow-sm">
+                    <button
+                        type="button"
+                        aria-label="Dismiss error"
+                        onClick={() => setDeleteError(null)}
+                        className="absolute left-2 top-1.5 flex size-5 items-center justify-center rounded text-base leading-none text-danger transition-colors hover:bg-danger/10 cursor-pointer"
+                    >
+                        ×
+                    </button>
+
+                    <p>
+                        {deleteError === 'lastWorkspace'
+                            ? 'You cannot delete your only workspace.'
+                            : 'Something went wrong. Please try again.'}
+                    </p>
+                </div>
+            )}
         </div>
     )
 }

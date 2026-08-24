@@ -35,8 +35,8 @@ export default function KanbanCard({
       onDragStart={() => onDragStart(card.id)}
       onDragEnd={onDragEnd}
       className={`flex items-center justify-between border rounded-xl p-4 text-black cursor-grab select-none active:cursor-grabbing transition-all duration-200 ${isDragging
-          ? "opacity-60 scale-105 shadow-md bg-primary-light border-primary-border"
-          : "opacity-100 scale-100 shadow-sm bg-white border-black/10"
+        ? "opacity-60 scale-105 shadow-md bg-primary-light border-primary-border"
+        : "opacity-100 scale-100 shadow-sm bg-white border-black/10"
         }`}
     >
       {isEditing ? (
@@ -63,7 +63,7 @@ export default function KanbanCard({
       )}
 
       <button
-        className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-black/5 hover:rounded p-1 shrink-0"
+        className="hover:bg-primary/30 hover:text-black text-sm normal-case tracking-normal font-bold cursor-pointer hover:rounded p-1 shrink-0"
         onClick={() => onDeleteClick(card.id)}
       >
         Delete

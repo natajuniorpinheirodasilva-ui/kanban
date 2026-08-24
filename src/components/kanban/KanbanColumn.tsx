@@ -115,7 +115,7 @@ export default function KanbanColumn({
         )}
 
         <button
-          className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-black/5 hover:rounded shrink-0"
+          className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-primary/30 hover:rounded shrink-0 hover:text-black"
           onClick={() => onDeleteColumnClick(column.id)}
         >
           Delete Column
@@ -148,10 +148,10 @@ export default function KanbanColumn({
         />
       ) : (
         <button
-          className="mt-2 w-full text-left text-sm text-gray-500 hover:text-black hover:bg-black/5 p-2 rounded-lg transition cursor-pointer"
+          className="hover-lift border border-black/10 mt-2 w-full text-left text-sm text-gray-500 hover:text-black hover:bg-black/5 p-2 rounded-lg transition cursor-pointer"
           onClick={() => onActivateNewCardForm(column.id)}
         >
-          + Add Card
+          Add Card
         </button>
       )}
     </div>

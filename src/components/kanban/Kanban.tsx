@@ -219,69 +219,69 @@ function Kanban({ board, workspaces }: Props) {
                     onClick={() => setNewColumnButton(true)}
                     className="hover-lift rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                 >
-                    + New column
+                    New column
                 </button>
             </div>
 
             <div className="flex items-start justify-start gap-5 overflow-x-auto p-6">
                 {columns.map((column) => {
-                const columnCards = cards.filter((card) => card.columnId === column.id)
-                const isDragOver = dragOverColumnId === column.id && Boolean(draggedColumnId || draggedCardId)
+                    const columnCards = cards.filter((card) => card.columnId === column.id)
+                    const isDragOver = dragOverColumnId === column.id && Boolean(draggedColumnId || draggedCardId)
 
-                return (
-                    <KanbanColumn
-                        key={column.id}
-                        column={column}
-                        cards={columnCards}
-                        columns={columns}
-                        isDragOver={isDragOver}
-                        isColumnDragging={draggedColumnId === column.id}
-                        draggedCardId={draggedCardId}
-                        onDragOverColumn={setDragOverColumnId}
-                        onDropOnColumn={(colId) => {
-                            setDragOverColumnId(null)
-                            if (draggedColumnId) {
-                                handleColumnDrop(colId)
-                            } else {
-                                handleCardDrop(colId)
-                            }
-                        }}
-                        onColumnDragStart={setDraggedColumnId}
-                        onColumnDragEnd={() => setDraggedColumnId(null)}
-                        editingColumnId={editingColumnId}
-                        editingColumnTitle={editingColumnTitle}
-                        onStartEditColumn={(col) => {
-                            setEditingColumnId(col.id)
-                            setEditingColumnTitle(col.title)
-                        }}
-                        onEditColumnTitleChange={setEditingColumnTitle}
-                        onSaveColumnTitle={handleColumnTitleSave}
-                        onCancelEditColumn={() => setEditingColumnId(null)}
-                        onDeleteColumnClick={(colId) => {
-                            setColumnIdToDelete(colId)
-                            setColumnDeleteAlert(true)
-                        }}
-                        editingCardId={editingCardId}
-                        editingCardTitle={editingCardTitle}
-                        onCardDragStart={setDraggedCardId}
-                        onCardDragEnd={() => setDraggedCardId(null)}
-                        onStartEditCard={(card) => {
-                            setEditingCardId(card.id)
-                            setEditingCardTitle(card.title)
-                        }}
-                        onEditCardTitleChange={setEditingCardTitle}
-                        onSaveCardTitle={handleCardTitleSave}
-                        onCancelEditCard={() => setEditingCardId(null)}
-                        onDeleteCardClick={(cardId) => {
-                            setCardIdToDelete(cardId)
-                            setCardDeleteAlert(true)
-                        }}
-                        activeColumnForCard={activeColumnForCard}
-                        onActivateNewCardForm={setActiveColumnForCard}
-                        onCancelNewCardForm={() => setActiveColumnForCard(null)}
-                        onCardCreate={handleCardCreate}
-                    />
-                )
+                    return (
+                        <KanbanColumn
+                            key={column.id}
+                            column={column}
+                            cards={columnCards}
+                            columns={columns}
+                            isDragOver={isDragOver}
+                            isColumnDragging={draggedColumnId === column.id}
+                            draggedCardId={draggedCardId}
+                            onDragOverColumn={setDragOverColumnId}
+                            onDropOnColumn={(colId) => {
+                                setDragOverColumnId(null)
+                                if (draggedColumnId) {
+                                    handleColumnDrop(colId)
+                                } else {
+                                    handleCardDrop(colId)
+                                }
+                            }}
+                            onColumnDragStart={setDraggedColumnId}
+                            onColumnDragEnd={() => setDraggedColumnId(null)}
+                            editingColumnId={editingColumnId}
+                            editingColumnTitle={editingColumnTitle}
+                            onStartEditColumn={(col) => {
+                                setEditingColumnId(col.id)
+                                setEditingColumnTitle(col.title)
+                            }}
+                            onEditColumnTitleChange={setEditingColumnTitle}
+                            onSaveColumnTitle={handleColumnTitleSave}
+                            onCancelEditColumn={() => setEditingColumnId(null)}
+                            onDeleteColumnClick={(colId) => {
+                                setColumnIdToDelete(colId)
+                                setColumnDeleteAlert(true)
+                            }}
+                            editingCardId={editingCardId}
+                            editingCardTitle={editingCardTitle}
+                            onCardDragStart={setDraggedCardId}
+                            onCardDragEnd={() => setDraggedCardId(null)}
+                            onStartEditCard={(card) => {
+                                setEditingCardId(card.id)
+                                setEditingCardTitle(card.title)
+                            }}
+                            onEditCardTitleChange={setEditingCardTitle}
+                            onSaveCardTitle={handleCardTitleSave}
+                            onCancelEditCard={() => setEditingCardId(null)}
+                            onDeleteCardClick={(cardId) => {
+                                setCardIdToDelete(cardId)
+                                setCardDeleteAlert(true)
+                            }}
+                            activeColumnForCard={activeColumnForCard}
+                            onActivateNewCardForm={setActiveColumnForCard}
+                            onCancelNewCardForm={() => setActiveColumnForCard(null)}
+                            onCardCreate={handleCardCreate}
+                        />
+                    )
                 })}
 
                 {newColumnButton && (
