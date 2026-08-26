@@ -108,7 +108,7 @@ function WorkspaceSwitcher({ workspaces, activeWorkspaceId }: Props) {
                         value={title}
                         placeholder="Workspace name"
                         onChange={(event) => setTitle(event.target.value)}
-                        className={`rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-primary ${hasError ? 'border-danger' : 'border-black/15'}`}
+                        className={`rounded-lg border bg-input px-3 py-2 text-sm text-foreground outline-none focus:border-primary ${hasError ? 'border-danger' : 'border-border'}`}
                     />
                     {hasError && (
                         <p className="mt-1 text-xs text-danger">Please enter a valid name.</p>
@@ -131,7 +131,7 @@ function WorkspaceSwitcher({ workspaces, activeWorkspaceId }: Props) {
                         setTitle('')
                         setHasError(false)
                     }}
-                    className="hover-lift rounded-lg border border-black/10 px-3 py-2 text-sm text-gray-600 hover:bg-black/5 disabled:opacity-50 cursor-pointer"
+                    className="hover-lift rounded-lg border border-border bg-surface-muted px-3 py-2 text-sm text-foreground-muted hover:bg-surface-elevated hover:text-foreground disabled:opacity-50 cursor-pointer"
                 >
                     Cancel
                 </button>
@@ -143,11 +143,11 @@ function WorkspaceSwitcher({ workspaces, activeWorkspaceId }: Props) {
         <div className="flex flex-col gap-2">
             <div className="flex flex-wrap items-end gap-3">
                 <label className="flex flex-col gap-1">
-                    <span className="text-xs font-medium uppercase tracking-wider text-gray-500">Workspace</span>
+                    <span className="text-xs font-medium uppercase tracking-wider text-foreground-muted">Workspace</span>
                     <select
                         value={activeWorkspaceId}
                         onChange={(event) => handleWorkspaceChange(event.target.value)}
-                        className="min-w-44 rounded-lg border border-black/15 bg-white px-3 py-2 text-sm font-semibold text-foreground outline-none focus:border-primary cursor-pointer"
+                        className="min-w-44 rounded-lg border border-border bg-input px-3 py-2 text-sm font-semibold text-foreground outline-none focus:border-primary cursor-pointer"
                     >
                         {workspaces.map((workspace) => (
                             <option key={workspace.id} value={workspace.id}>

@@ -206,8 +206,8 @@ function Kanban({ board, workspaces }: Props) {
     }
 
     return (
-        <section className="relative z-0 mx-5 mt-4 min-h-[80vh] overflow-hidden rounded-2xl border border-black/10 border-t-2 border-t-primary bg-white/70 shadow-sm backdrop-blur-sm">
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 px-6 py-4">
+        <section className="relative z-0 mx-5 mt-4 min-h-[80vh] overflow-hidden rounded-2xl border border-border border-t-2 border-t-primary bg-surface shadow-xl">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-surface px-6 py-4">
                 <WorkspaceSwitcher
                     workspaces={workspaces}
                     activeWorkspaceId={board.id}

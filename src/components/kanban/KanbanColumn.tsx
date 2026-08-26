@@ -78,14 +78,14 @@ export default function KanbanColumn({
 
   return (
     <div
-      className={`flex flex-col w-72 gap-3 p-4 rounded-xl shadow-sm shrink-0 border transition-colors duration-200 ${isDragOver ? "bg-primary-light border-primary-border" : "bg-gray-100 border-black/5"
+      className={`flex flex-col w-72 gap-3 p-4 rounded-xl shadow-sm shrink-0 border transition-colors duration-200 ${isDragOver ? "bg-primary-light border-primary-border" : "bg-surface-muted border-border"
         } min-h-25`}
       onDragOver={(e) => e.preventDefault()}
       onDragEnter={() => onDragOverColumn(column.id)}
       onDrop={() => onDropOnColumn(column.id)}
     >
       <h2
-        className={`flex items-center justify-between text-base font-semibold uppercase tracking-wide border-b pb-1 cursor-grab active:cursor-grabbing transition-all duration-200 ${isColumnDragging ? "opacity-40 text-primary-hover" : "opacity-100 text-black/70"
+        className={`flex items-center justify-between text-base font-semibold uppercase tracking-wide border-b border-border pb-1 cursor-grab active:cursor-grabbing transition-all duration-200 ${isColumnDragging ? "opacity-40 text-primary-hover" : "opacity-100 text-foreground"
           }`}
         draggable={!isEditingColumn}
         onDragStart={() => onColumnDragStart(column.id)}
@@ -94,7 +94,7 @@ export default function KanbanColumn({
         {isEditingColumn ? (
           <input
             type="text"
-            className="bg-white border border-gray-300 rounded px-2 py-0.5 text-sm normal-case text-black focus:outline-none focus:ring-1 focus:ring-black w-full mr-2"
+            className="bg-input border border-border rounded px-2 py-0.5 text-sm normal-case text-foreground focus:outline-none focus:ring-1 focus:ring-primary w-full mr-2"
             value={editingColumnTitle}
             onChange={(e) => onEditColumnTitleChange(e.target.value)}
             onBlur={() => onSaveColumnTitle(column.id)}
@@ -115,7 +115,7 @@ export default function KanbanColumn({
         )}
 
         <button
-          className="text-sm normal-case tracking-normal font-bold cursor-pointer hover:bg-primary/30 hover:rounded shrink-0 hover:text-black"
+          className="text-sm normal-case tracking-normal font-bold text-foreground-muted cursor-pointer hover:bg-danger-light hover:rounded shrink-0 hover:text-danger"
           onClick={() => onDeleteColumnClick(column.id)}
         >
           Delete Column
@@ -148,7 +148,7 @@ export default function KanbanColumn({
         />
       ) : (
         <button
-          className="hover-lift border border-black/10 mt-2 w-full text-left text-sm text-gray-500 hover:text-black hover:bg-black/5 p-2 rounded-lg transition cursor-pointer"
+          className="hover-lift border border-border mt-2 w-full text-left text-sm text-foreground-muted hover:text-foreground hover:bg-surface-elevated p-2 rounded-lg transition cursor-pointer"
           onClick={() => onActivateNewCardForm(column.id)}
         >
           Add Card

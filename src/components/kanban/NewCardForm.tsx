@@ -62,17 +62,17 @@ const NewCardForm = ({ columns, initialColumnId = '', onCreate, onCancel }: Prop
 
     return (
         <form
-            className="font-sans flex flex-col w-72 h-auto self-start gap-2 bg-white/5 border border-black/20 rounded-xl p-4 shadow-sm"
+            className="font-sans flex flex-col w-72 h-auto self-start gap-2 bg-surface-elevated border border-border rounded-xl p-4 shadow-sm"
             onSubmit={handleSubmit} >
             <input
-                className="border border-black/20 rounded p-2 bg-white"
+                className="border border-border rounded p-2 bg-input text-foreground outline-none focus:border-primary"
                 placeholder="Card title"
                 value={title}
                 type="text"
                 onChange={(e) => setTitle(e.target.value)} />
 
             <select
-                className="border border-black/20 rounded p-2"
+                className="border border-border rounded p-2 bg-input text-foreground outline-none focus:border-primary"
                 value={columnId}
                 onChange={(e) => setColumnId(e.target.value)}>
                 <option value="" disabled>Select a column</option>
@@ -92,7 +92,7 @@ const NewCardForm = ({ columns, initialColumnId = '', onCreate, onCancel }: Prop
                     Submit
                 </button>
                 <button
-                    className="border-black/10 border text-gray-500 hover:text-black text-sm font-medium rounded-lg px-3 py-1.5 hover:bg-black/5 transition hover-lift"
+                    className="border-border border text-foreground-muted hover:text-foreground text-sm font-medium rounded-lg px-3 py-1.5 hover:bg-surface-muted transition hover-lift"
                     type="button"
                     onClick={onCancel}>
                     Cancel

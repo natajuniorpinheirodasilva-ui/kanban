@@ -34,15 +34,15 @@ export default function KanbanCard({
       draggable={!isEditing}
       onDragStart={() => onDragStart(card.id)}
       onDragEnd={onDragEnd}
-      className={`flex items-center justify-between border rounded-xl p-4 text-black cursor-grab select-none active:cursor-grabbing transition-all duration-200 ${isDragging
+      className={`flex items-center justify-between border rounded-xl p-4 text-foreground cursor-grab select-none active:cursor-grabbing transition-all duration-200 ${isDragging
         ? "opacity-60 scale-105 shadow-md bg-primary-light border-primary-border"
-        : "opacity-100 scale-100 shadow-sm bg-white border-black/10"
+        : "opacity-100 scale-100 shadow-sm bg-surface-elevated border-border"
         }`}
     >
       {isEditing ? (
         <input
           type="text"
-          className="bg-white border border-gray-300 rounded px-2 py-1 text-sm text-black focus:outline-none focus:ring-1 focus:ring-black w-full mr-2"
+          className="bg-input border border-border rounded px-2 py-1 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary w-full mr-2"
           value={editingTitle}
           onChange={(e) => onEditChange(e.target.value)}
           onBlur={() => onSaveEdit(card.id)}
@@ -63,7 +63,7 @@ export default function KanbanCard({
       )}
 
       <button
-        className="hover:bg-primary/30 hover:text-black text-sm normal-case tracking-normal font-bold cursor-pointer hover:rounded p-1 shrink-0"
+        className="text-sm normal-case tracking-normal font-bold text-foreground-muted cursor-pointer hover:rounded hover:bg-danger-light hover:text-danger p-1 shrink-0"
         onClick={() => onDeleteClick(card.id)}
       >
         Delete

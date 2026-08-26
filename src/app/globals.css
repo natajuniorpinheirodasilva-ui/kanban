@@ -15,11 +15,45 @@
   --danger-border: #fecaca;
   --danger-dark: #7f1d1d;
 
-  --background: #f9fafb;
+  --background: #f5f5f7;
   --surface: #ffffff;
+  --surface-muted: #f1f1f4;
+  --surface-elevated: #ffffff;
+  --input: #ffffff;
+  --navbar: #ef4444;
   --foreground: #111827;
+  --foreground-muted: #6b7280;
+  --border: #dedee5;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --primary: #f05252;
+  --primary-hover: #fb6b6b;
+  --primary-light: #32171a;
+  --primary-border: #713036;
+  --primary-muted: #f87171;
+  --primary-dark: #991b1b;
+  --primary-deep: #450a0a;
+
+  --danger: #f87171;
+  --danger-hover: #fca5a5;
+  --danger-light: #32171a;
+  --danger-border: #713036;
+  --danger-dark: #991b1b;
+
+  --background: #09090b;
+  --surface: #141418;
+  --surface-muted: #1c1c22;
+  --surface-elevated: #24242b;
+  --input: #1f1f26;
+  --navbar: #18181d;
+  --foreground: #f4f4f5;
+  --foreground-muted: #a1a1aa;
+  --border: #303039;
 }
 
 @theme inline {
@@ -39,18 +73,27 @@
 
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-input: var(--input);
+  --color-navbar: var(--navbar);
   --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-border: var(--border);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, sans-serif;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 select,
 option {
   font-family: var(--font-geist-sans), Arial, sans-serif;
+  background-color: var(--input);
+  color: var(--foreground);
 }
 
 #drag-item {

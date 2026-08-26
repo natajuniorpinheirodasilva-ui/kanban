@@ -3,6 +3,7 @@
 import { LogOutIcon, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 type Props = {
     userName: string;
@@ -63,7 +64,7 @@ function UserMenu({ userName }: Props) {
                 aria-haspopup="menu"
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((open) => !open)}
-                className="hover-lift flex size-10 items-center justify-center rounded-full bg-black text-white shadow-sm cursor-pointer"
+                className="hover-lift flex size-10 items-center justify-center rounded-full bg-foreground text-surface shadow-sm cursor-pointer"
             >
                 <User className="size-5" />
             </button>
@@ -71,11 +72,14 @@ function UserMenu({ userName }: Props) {
             {isOpen && (
                 <div
                     role="menu"
-                    className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-black/10 bg-surface p-2 shadow-xl"
+                    className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-border bg-surface p-2 shadow-xl"
                 >
-                    <div className="border-b border-black/10 px-3 py-2">
-                        <p className="text-xs text-gray-500">Hello,</p>
-                        <p className="truncate text-sm font-semibold text-foreground">{userName}</p>
+                    <div className="flex items-center justify-between border-b border-border px-3 py-2">
+                        <div>
+                            <p className="text-xs text-foreground-muted">Hello,</p>
+                            <p className="truncate text-sm font-semibold text-foreground">{userName}</p>
+                        </div>
+                        <ThemeToggle />
                     </div>
 
                     <button
