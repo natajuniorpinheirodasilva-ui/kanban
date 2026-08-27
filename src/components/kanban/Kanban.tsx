@@ -154,11 +154,12 @@ function Kanban({ board, workspaces }: Props) {
         )
 
         try {
-            const response = await fetch(`/api/cards/${draggedCardId}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ columnId: targetColumnId, position: newPosition }),
-            })
+            const response = await fetch(`/api/cards/${draggedCardId}`,
+                {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ columnId: targetColumnId, position: newPosition }),
+                })
             if (!response.ok) setCardDeleteError(true)
         } catch (error) {
             setCardDeleteError(true)
