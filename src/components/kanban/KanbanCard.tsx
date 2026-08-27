@@ -1,6 +1,7 @@
 'use client'
 
 import { Card } from "@/generated/prisma/client"
+import { DeleteIcon } from "lucide-react";
 
 type KanbanCardProps = {
   card: Card;
@@ -62,12 +63,13 @@ export default function KanbanCard({
         </span>
       )}
 
-      <button
-        className="text-sm normal-case tracking-normal font-bold text-foreground-muted cursor-pointer hover:rounded hover:bg-danger-light hover:text-danger p-1 shrink-0"
-        onClick={() => onDeleteClick(card.id)}
-      >
-        Delete
-      </button>
+      {!isEditing && (
+        <button
+          onClick={() => onDeleteClick(card.id)}
+        >
+          <DeleteIcon className="size-4 text-sm normal-case tracking-normal font-bold text-foreground-muted cursor-pointer hover:text-danger hover:rounded shrink-0" />
+        </button>
+      )}
     </div>
   )
 }

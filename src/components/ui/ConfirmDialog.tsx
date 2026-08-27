@@ -3,7 +3,6 @@
 type Props = {
     message: string;
     hasError?: boolean;
-    errorMessage?: string;
     onConfirm: () => void;
     onCancel: () => void;
 }
@@ -14,7 +13,7 @@ const confirmBtnClass = `${baseBtnClass} bg-danger text-white border-danger-hove
 
 const cancelBtnClass = `${baseBtnClass} bg-surface-muted text-foreground-muted border-border hover:bg-surface-elevated hover:text-foreground hover:border-foreground-muted`
 
-function ConfirmDialog({ message, onConfirm, onCancel, hasError, errorMessage }: Props) {
+function ConfirmDialog({ message, onConfirm, onCancel, hasError }: Props) {
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-surface p-6 rounded-2xl shadow-2xl flex flex-col gap-6 w-full max-w-sm border border-border border-t-4 border-t-danger">
@@ -38,9 +37,7 @@ function ConfirmDialog({ message, onConfirm, onCancel, hasError, errorMessage }:
                 {hasError && (
                     <div className="w-full text-center">
                         <div className="mx-auto mb-2 h-px w-3/4 bg-linear-to-r from-transparent via-danger to-transparent" />
-                        <p className="text-xs text-danger">
-                            {errorMessage ?? 'Error, try again later'}
-                        </p>
+                        <p className="text-xs"> Error, try again later </p>
                     </div>
                 )}
             </div>

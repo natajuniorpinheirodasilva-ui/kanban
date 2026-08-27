@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Pen } from 'lucide-react'
+import { Pen, Edit } from 'lucide-react'
 import ConfirmDialog from '@/components/ui/ConfirmDialog'
 
 type Workspace = {
@@ -87,6 +87,7 @@ function WorkspaceSwitcher({ workspaces, activeWorkspaceId }: Props) {
 
     async function handleWorkspaceDelete() {
         setDeleteError(null)
+        setWorkspaceDeleteAlert(false)
         setIsDeleting(true)
 
         try {
@@ -217,7 +218,7 @@ function WorkspaceSwitcher({ workspaces, activeWorkspaceId }: Props) {
                             aria-label="Rename workspace"
                             className="text-primary transition-colors hover:text-primary-hover cursor-pointer"
                         >
-                            <Pen className="size-3.5" />
+                            <Edit className="size-3.5" />
                         </button>
                     </div>
 
@@ -262,24 +263,28 @@ function WorkspaceSwitcher({ workspaces, activeWorkspaceId }: Props) {
                     )}
                 </div>
 
-                <button
-                    type="button"
-                    onClick={() => setIsCreating(true)}
-                    className="hover-lift rounded-lg border border-primary-border bg-primary-light px-3 py-2 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary hover:text-white cursor-pointer"
-                >
-                    New workspace
-                </button>
-                <button
-                    type="button"
-                    disabled={isDeleting}
-                    onClick={() => {
-                        setDeleteError(null)
-                        setWorkspaceDeleteAlert(true)
-                    }}
-                    className="hover-lift rounded-lg border border-primary-border bg-primary-light px-3 py-2 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
-                >
-                    {isDeleting ? 'Deleting...' : 'Remove this workspace'}
-                </button>
+                {!isEditing && (
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => setIsCreating(true)}
+                            className="hover-lift rounded-lg border border-primary-border bg-primary-light px-3 py-2 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary hover:text-white cursor-pointer"
+                        >
+                            New workspace
+                        </button>
+                        <button
+                            type="button"
+                            disabled={isDeleting}
+                            onClick={() => {
+                                setDeleteError(null)
+                                setWorkspaceDeleteAlert(true)
+                            }}
+                            className="hover-lift rounded-lg border border-primary-border bg-primary-light px-3 py-2 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                        >
+                            {isDeleting ? 'Deleting...' : 'Remove this workspace'}
+                        </button>
+                    </>
+                )}
             </div>
 
             {editError && isEditing && (
@@ -291,10 +296,6 @@ function WorkspaceSwitcher({ workspaces, activeWorkspaceId }: Props) {
             {workspaceDeleteAlert && (
                 <ConfirmDialog
                     message="Delete this workspace?"
-                    hasError={deleteError !== null}
-                    errorMessage={deleteError === 'lastWorkspace'
-                        ? 'You cannot delete your only workspace.'
-                        : 'Something went wrong. Please try again.'}
                     onConfirm={handleWorkspaceDelete}
                     onCancel={() => {
                         setWorkspaceDeleteAlert(false)

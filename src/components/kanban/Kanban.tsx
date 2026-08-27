@@ -35,6 +35,8 @@ function Kanban({ board, workspaces }: Props) {
 
     const [editingColumnId, setEditingColumnId] = useState<string | null>(null)
     const [editingColumnTitle, setEditingColumnTitle] = useState<string>("")
+    const [isSavingColumn, setIsSavingColumn] = useState(false)
+    const [columnEditError, setColumnEditError] = useState(false)
 
     const [editingCardId, setEditingCardId] = useState<string | null>(null)
     const [editingCardTitle, setEditingCardTitle] = useState<string>("")
@@ -93,12 +95,12 @@ function Kanban({ board, workspaces }: Props) {
     async function handleColumnTitleSave(columnId: string) {
         const trimmedTitle = editingColumnTitle.trim()
         if (!trimmedTitle) {
-            setEditingColumnId(null)
+            setColumnEditError(true)
             return
         }
 
-        setColumns(columns.map((col) => (col.id === columnId ? { ...col, title: trimmedTitle } : col)))
-        setEditingColumnId(null)
+        setColumnEditError(false)
+        setIsSavingColumn(true)
 
         try {
             const response = await fetch(`/api/columns/${columnId}`, {
@@ -106,9 +108,22 @@ function Kanban({ board, workspaces }: Props) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ title: trimmedTitle }),
             })
-            if (!response.ok) setColumnDeleteError(true)
-        } catch (error) {
-            setColumnDeleteError(true)
+
+            if (!response.ok) {
+                setColumnEditError(true)
+                return
+            }
+
+            const updatedColumn: Column = await response.json()
+            setColumns((currentColumns) => currentColumns.map((column) =>
+                column.id === columnId ? updatedColumn : column
+            ))
+            setEditingColumnId(null)
+            setEditingColumnTitle("")
+        } catch {
+            setColumnEditError(true)
+        } finally {
+            setIsSavingColumn(false)
         }
     }
 
@@ -251,13 +266,20 @@ function Kanban({ board, workspaces }: Props) {
                             onColumnDragEnd={() => setDraggedColumnId(null)}
                             editingColumnId={editingColumnId}
                             editingColumnTitle={editingColumnTitle}
+                            isSavingColumn={isSavingColumn}
+                            columnEditError={columnEditError}
                             onStartEditColumn={(col) => {
+                                setColumnEditError(false)
                                 setEditingColumnId(col.id)
                                 setEditingColumnTitle(col.title)
                             }}
                             onEditColumnTitleChange={setEditingColumnTitle}
                             onSaveColumnTitle={handleColumnTitleSave}
-                            onCancelEditColumn={() => setEditingColumnId(null)}
+                            onCancelEditColumn={() => {
+                                setEditingColumnId(null)
+                                setEditingColumnTitle("")
+                                setColumnEditError(false)
+                            }}
                             onDeleteColumnClick={(colId) => {
                                 setColumnIdToDelete(colId)
                                 setColumnDeleteAlert(true)

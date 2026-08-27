@@ -3,6 +3,7 @@
 import { Card, Column } from "@/generated/prisma/client"
 import KanbanCard from "./KanbanCard"
 import NewCardForm from "@/components/kanban/NewCardForm"
+import { Edit, X } from "lucide-react"
 
 type KanbanColumnProps = {
   column: Column;
@@ -19,6 +20,8 @@ type KanbanColumnProps = {
 
   editingColumnId: string | null;
   editingColumnTitle: string;
+  isSavingColumn: boolean;
+  columnEditError: boolean;
   onStartEditColumn: (column: Column) => void;
   onEditColumnTitleChange: (title: string) => void;
   onSaveColumnTitle: (columnId: string) => void;
@@ -54,6 +57,8 @@ export default function KanbanColumn({
   onColumnDragEnd,
   editingColumnId,
   editingColumnTitle,
+  isSavingColumn,
+  columnEditError,
   onStartEditColumn,
   onEditColumnTitleChange,
   onSaveColumnTitle,
@@ -84,7 +89,7 @@ export default function KanbanColumn({
       onDragEnter={() => onDragOverColumn(column.id)}
       onDrop={() => onDropOnColumn(column.id)}
     >
-      <h2
+      <div
         className={`flex items-center justify-between text-base font-semibold uppercase tracking-wide border-b border-border pb-1 cursor-grab active:cursor-grabbing transition-all duration-200 ${isColumnDragging ? "opacity-40 text-primary-hover" : "opacity-100 text-foreground"
           }`}
         draggable={!isEditingColumn}
@@ -92,35 +97,69 @@ export default function KanbanColumn({
         onDragEnd={onColumnDragEnd}
       >
         {isEditingColumn ? (
-          <input
-            type="text"
-            className="bg-input border border-border rounded px-2 py-0.5 text-sm normal-case text-foreground focus:outline-none focus:ring-1 focus:ring-primary w-full mr-2"
-            value={editingColumnTitle}
-            onChange={(e) => onEditColumnTitleChange(e.target.value)}
-            onBlur={() => onSaveColumnTitle(column.id)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") onSaveColumnTitle(column.id)
-              if (e.key === "Escape") onCancelEditColumn()
-            }}
-            autoFocus
-          />
+          <div className="mr-2 flex min-w-0 flex-1 flex-col gap-1 normal-case">
+            <input
+              type="text"
+              disabled={isSavingColumn}
+              className={`w-full rounded border bg-input px-2 py-0.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50 ${columnEditError ? 'border-danger' : 'border-border'}`}
+              value={editingColumnTitle}
+              onChange={(e) => onEditColumnTitleChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") onSaveColumnTitle(column.id)
+                if (e.key === "Escape") onCancelEditColumn()
+              }}
+              autoFocus
+            />
+            <div className="flex items-center gap-2 text-xs">
+              <button
+                type="button"
+                disabled={isSavingColumn}
+                onClick={() => onSaveColumnTitle(column.id)}
+                className="text-primary hover:text-primary-hover disabled:opacity-50 cursor-pointer"
+              >
+                {isSavingColumn ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                type="button"
+                disabled={isSavingColumn}
+                onClick={onCancelEditColumn}
+                className="text-foreground-muted hover:text-foreground disabled:opacity-50 cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+            {columnEditError && (
+              <p className="text-xs font-normal text-danger">Unable to rename column.</p>
+            )}
+          </div>
         ) : (
-          <span
-            className="cursor-pointer hover:underline break-words mr-2 flex-1 min-w-0"
-            title="Click to edit column title"
-            onClick={() => onStartEditColumn(column)}
-          >
-            {column.title}
-          </span>
+          <div className="mr-2 flex min-w-0 flex-1 items-center">
+            <span className="min-w-0 break-words">
+              {column.title}
+            </span>
+            <button
+              type="button"
+              draggable={false}
+              aria-label="Rename column"
+              title="Rename column"
+              onMouseDown={(event) => event.stopPropagation()}
+              onClick={() => onStartEditColumn(column)}
+              className="ml-1 shrink-0 text-primary hover:text-primary-hover cursor-pointer"
+            >
+              <Edit className="size-4" />
+            </button>
+          </div>
         )}
 
-        <button
-          className="text-sm normal-case tracking-normal font-bold text-foreground-muted cursor-pointer hover:bg-danger-light hover:rounded shrink-0 hover:text-danger"
-          onClick={() => onDeleteColumnClick(column.id)}
-        >
-          Delete Column
-        </button>
-      </h2>
+        {!isEditingColumn && (
+          <button
+            className=""
+            onClick={() => onDeleteColumnClick(column.id)}
+          >
+            <X className="size-4 text-sm normal-case tracking-normal font-bold text-foreground-muted cursor-pointer hover:text-danger hover:rounded shrink-0" />
+          </button>
+        )}
+      </div>
 
       {cards.map((card) => (
         <KanbanCard
