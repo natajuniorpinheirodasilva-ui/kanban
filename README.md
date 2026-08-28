@@ -33,7 +33,7 @@ Passwords are hashed before storage. After authentication, the server creates a 
 
 **Remember me** controls whether the cookie persists for up to 30 days or lasts only for the current browser session. Protected requests validate the token, expiration date, and associated user before accessing any data.
 
-![Signup](public/signin.png)
+![Signup](public/signup.png)
 
 ![Signin](public/signin.png)
 
