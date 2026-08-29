@@ -168,3 +168,29 @@ option {
 .hover-lift:active {
   transform: translateY(0);
 }
+
+@keyframes dropSettle {
+  0% {
+    transform: scale(1.025);
+  }
+
+  55% {
+    transform: scale(0.99);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-drop-settle {
+  animation: dropSettle 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-drop-settle,
+  .hover-lift {
+    animation: none;
+    transition-duration: 0ms;
+  }
+}
