@@ -1,6 +1,6 @@
 # Kanban
 
-A full-stack Kanban application built with Next.js, React, TypeScript, Prisma, and SQLite.
+A full-stack Kanban application built with Next.js, React, TypeScript, Prisma, and PostgreSQL.
 
 The project provides authenticated, user-specific workspaces where columns and cards can be created, edited, deleted, and reordered through a modern drag-and-drop interface.
 
@@ -83,7 +83,7 @@ Logging out invalidates the database session, removes the authentication cookie,
 - Tailwind CSS 4
 - dnd-kit
 - Prisma ORM 7
-- SQLite with better-sqlite3
+- PostgreSQL
 - bcryptjs
 - Lucide React
 
@@ -170,7 +170,7 @@ npm install
 Create a `.env` file in the project root:
 
 ```env
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgres://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
 ```
 
 Generate the Prisma client, apply the migrations, and run the development server:
@@ -187,13 +187,11 @@ Open `http://localhost:3000/signup` to create an account.
 
 - Position values are not automatically rebalanced after extensive reordering.
 - Expired sessions are validated but are not automatically removed from the database.
-- The local SQLite database must be replaced with a hosted database for Vercel deployment.
 
 ## Roadmap
 
 - Add profile and account settings
 - Improve keyboard accessibility for board reordering
-- Migrate from SQLite to hosted PostgreSQL
 - Deploy the application to Vercel
 
 ## License
