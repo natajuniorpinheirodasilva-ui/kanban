@@ -2,12 +2,19 @@ import { prisma } from "@/lib/Prisma"
 import { cookies } from "next/headers"
 import bcrypt from "bcryptjs"
 import crypto from "crypto"
+import { isValidEmail, normalizeEmail } from "@/lib/auth-validation"
 
 export async function POST(request: Request) {
     const body = await request.json()
     const { email, password, rememberMe } = body
 
-    if (!email || !password) {
+    if (
+        typeof email !== "string" ||
+        !isValidEmail(email) ||
+        typeof password !== "string" ||
+        password.length === 0 ||
+        password.length > 72
+    ) {
         return Response.json(
             { error: "Invalid credentials." },
             { status: 400 }
@@ -16,7 +23,7 @@ export async function POST(request: Request) {
 
     const existingUser = await prisma.user.findUnique({
         where: {
-            email
+            email: normalizeEmail(email)
         }
     })
 

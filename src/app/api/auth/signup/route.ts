@@ -2,21 +2,38 @@ import { prisma } from "@/lib/Prisma"
 import { cookies } from "next/headers"
 import bcrypt from "bcryptjs"
 import crypto from "crypto"
+import { isStrongPassword, isValidEmail, normalizeEmail, PASSWORD_REQUIREMENTS } from "@/lib/auth-validation"
 
 export async function POST(request: Request) {
     const body = await request.json()
     const { name, email, password, rememberMe } = body
 
-    if (!name || !email || !password) {
+    if (
+        typeof name !== "string" ||
+        name.trim().length === 0 ||
+        name.trim().length > 80 ||
+        typeof email !== "string" ||
+        typeof password !== "string"
+    ) {
         return Response.json(
             { error: "All fields are required." },
             { status: 400 }
         )
     }
 
+    const normalizedEmail = normalizeEmail(email)
+
+    if (!isValidEmail(normalizedEmail)) {
+        return Response.json({ error: "Enter a valid e-mail address." }, { status: 400 })
+    }
+
+    if (!isStrongPassword(password)) {
+        return Response.json({ error: PASSWORD_REQUIREMENTS }, { status: 400 })
+    }
+
     const existingUser = await prisma.user.findUnique({
         where: {
-            email
+            email: normalizedEmail
         }
     })
 
@@ -31,8 +48,8 @@ export async function POST(request: Request) {
 
     const user = await prisma.user.create({
         data: {
-            name,
-            email,
+            name: name.trim(),
+            email: normalizedEmail,
             password: hashedPassword,
 
             boards: {

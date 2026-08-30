@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 
 import Input from "@/components/auth/Input"
 import Button from "@/components/auth/Button"
+import { isValidEmail, normalizeEmail } from "@/lib/auth-validation"
 
 type Card = {
     id: string
@@ -97,22 +98,18 @@ export default function SignIn() {
 
     const [signInError, setSignInError] = useState<boolean>(false)
     const [unexpectedError, setUnexpectedError] = useState<boolean>(false)
+    const [invalidEmail, setInvalidEmail] = useState<boolean>(false)
 
     async function handleSignIn(event: React.SubmitEvent) {
         event.preventDefault()
 
         setSignInError(false)
         setUnexpectedError(false)
+        const emailIsInvalid = !isValidEmail(email)
+        setInvalidEmail(emailIsInvalid)
 
-        if (email.length === 0) {
+        if (emailIsInvalid || password.length === 0) {
             setSignInError(true)
-        }
-
-        if (password.length === 0) {
-            setSignInError(true)
-        }
-
-        if (email.length === 0 || password.length === 0) {
             return
         }
 
@@ -123,7 +120,7 @@ export default function SignIn() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    email,
+                    email: normalizeEmail(email),
                     password,
                     rememberMe
                 })
@@ -396,6 +393,7 @@ export default function SignIn() {
             <div className="relative flex flex-col justify-center items-center w-full lg:w-1/2 bg-linear-to-br from-primary-dark via-primary to-primary-deep overflow-hidden p-6 xl:p-8">
                 <form
                     onSubmit={handleSignIn}
+                    noValidate
                     className="relative z-10 flex flex-col items-center w-full max-w-sm sm:max-w-md bg-surface/95 backdrop-blur-xl border border-border shadow-2xl p-6 sm:p-10 rounded-3xl"
                 >
                     <h1 className="text-3xl font-bold text-foreground">
@@ -410,8 +408,15 @@ export default function SignIn() {
                         <Input
                             type="email"
                             placeholder="E-mail"
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                                setInvalidEmail(false)
+                            }}
                         />
+                        {invalidEmail && (
+                            <p className="-mt-1 w-72 px-2 text-xs text-danger">Enter a valid e-mail, such as name@example.com.</p>
+                        )}
 
                         <Input
                             type="password"
@@ -472,6 +477,9 @@ export default function SignIn() {
                     )}
 
                 </form>
+                <p className="absolute bottom-3 px-4 text-center text-[10px] text-white/65">
+                    Educational project. Avoid using real credentials.
+                </p>
             </div>
         </div>
     )

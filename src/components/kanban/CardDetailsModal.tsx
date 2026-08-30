@@ -114,7 +114,7 @@ export default function CardDetailsModal({ card, onClose, onSave }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/65 p-4 backdrop-blur-[2px]"
+      className="fixed inset-0 z-60 flex items-center justify-center bg-black/65 p-4 backdrop-blur-[2px]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="card-details-title"
