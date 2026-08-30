@@ -64,9 +64,9 @@ function UserMenu({ userName }: Props) {
                 aria-haspopup="menu"
                 aria-expanded={isOpen}
                 onClick={() => setIsOpen((open) => !open)}
-                className="hover-lift flex size-10 items-center justify-center rounded-full bg-foreground text-surface shadow-sm cursor-pointer"
+                className="hover-lift flex size-9 cursor-pointer items-center justify-center rounded-full bg-foreground text-surface shadow-sm"
             >
-                <User className="size-5" />
+                <User className="size-4" />
             </button>
 
             {isOpen && (

@@ -21,6 +21,7 @@ The project provides authenticated, user-specific workspaces where columns and c
 - Column creation, inline editing, deletion, and reordering
 - Card creation, inline editing, deletion, and precise reordering
 - Card movement within and between columns using dnd-kit
+- Card details with descriptions, priorities, labels, and due dates
 - Visual insertion indicator above or below the destination card
 - Confirmation dialogs and contextual error/loading feedback
 - Light and dark themes with system preference detection
@@ -184,14 +185,12 @@ Open `http://localhost:3000/signup` to create an account.
 
 ## Current Limitations
 
-- Cards currently contain only a title.
 - Position values are not automatically rebalanced after extensive reordering.
 - Expired sessions are validated but are not automatically removed from the database.
 - The local SQLite database must be replaced with a hosted database for Vercel deployment.
 
 ## Roadmap
 
-- Add card descriptions, labels, priorities, and deadlines
 - Add profile and account settings
 - Improve keyboard accessibility for board reordering
 - Migrate from SQLite to hosted PostgreSQL

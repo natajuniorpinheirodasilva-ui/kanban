@@ -6,10 +6,11 @@ import NewColumnForm from "./NewColumnForm"
 import ConfirmDialog from "@/components/ui/ConfirmDialog"
 import KanbanColumn from "./KanbanColumn"
 import WorkspaceSwitcher from "./WorkspaceSwitcher"
+import CardDetailsModal from "./CardDetailsModal"
 import { useState } from "react"
 import { DragDropProvider, DragOverlay, type DragEndEvent } from "@dnd-kit/react"
 import { isSortable } from "@dnd-kit/react/sortable"
-import { X } from "lucide-react"
+import { Plus, X } from "lucide-react"
 
 type Props = {
     board: BoardWithColumnsAndCards;
@@ -41,6 +42,9 @@ function Kanban({ board, workspaces }: Props) {
 
     const [editingCardId, setEditingCardId] = useState<string | null>(null)
     const [editingCardTitle, setEditingCardTitle] = useState<string>("")
+    const [selectedCardId, setSelectedCardId] = useState<string | null>(null)
+
+    const selectedCard = cards.find((card) => card.id === selectedCardId) ?? null
 
     function handleCardCreate(newCard: Card) {
         setCards([...cards, newCard])
@@ -317,7 +321,7 @@ function Kanban({ board, workspaces }: Props) {
             onDragEnd={handleDragEnd}
         >
             <section className="relative z-0 mx-5 mt-4 min-h-[80vh] overflow-hidden rounded-2xl border border-border border-t-2 border-t-primary bg-surface shadow-xl">
-                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-surface px-6 py-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3">
                     <WorkspaceSwitcher
                         workspaces={workspaces}
                         activeWorkspaceId={board.id}
@@ -327,13 +331,14 @@ function Kanban({ board, workspaces }: Props) {
                         type="button"
                         disabled={newColumnButton}
                         onClick={() => setNewColumnButton(true)}
-                        className="hover-lift rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                        className="hover-lift flex h-9 cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-white shadow-sm hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                     >
+                        <Plus className="size-4" />
                         New column
                     </button>
                 </div>
 
-                <div className="flex items-start justify-start gap-5 overflow-x-auto p-6">
+                <div className="flex items-start justify-start gap-4 overflow-x-auto p-4">
                     {columns.map((column, columnIndex) => {
                         const columnCards = cards
                             .filter((card) => card.columnId === column.id)
@@ -375,6 +380,7 @@ function Kanban({ board, workspaces }: Props) {
                                 onEditCardTitleChange={setEditingCardTitle}
                                 onSaveCardTitle={handleCardTitleSave}
                                 onCancelEditCard={() => setEditingCardId(null)}
+                                onOpenCardDetails={(card) => setSelectedCardId(card.id)}
                                 onDeleteCardClick={(cardId) => {
                                     setCardIdToDelete(cardId)
                                     setCardDeleteAlert(true)
@@ -430,6 +436,19 @@ function Kanban({ board, workspaces }: Props) {
                         onCancel={() => {
                             setColumnDeleteAlert(false)
                             setColumnIdToDelete(null)
+                        }}
+                    />
+                )}
+
+                {selectedCard && (
+                    <CardDetailsModal
+                        card={selectedCard}
+                        onClose={() => setSelectedCardId(null)}
+                        onSave={(updatedCard) => {
+                            setCards((currentCards) => currentCards.map((card) =>
+                                card.id === updatedCard.id ? updatedCard : card
+                            ))
+                            setSelectedCardId(null)
                         }}
                     />
                 )}

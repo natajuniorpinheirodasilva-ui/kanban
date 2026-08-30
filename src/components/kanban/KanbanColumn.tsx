@@ -29,6 +29,7 @@ type KanbanColumnProps = {
   onEditCardTitleChange: (title: string) => void;
   onSaveCardTitle: (cardId: string) => void;
   onCancelEditCard: () => void;
+  onOpenCardDetails: (card: Card) => void;
   onDeleteCardClick: (cardId: string) => void;
 
   activeColumnForCard: string | null;
@@ -57,6 +58,7 @@ export default function KanbanColumn({
   onEditCardTitleChange,
   onSaveCardTitle,
   onCancelEditCard,
+  onOpenCardDetails,
   onDeleteCardClick,
   activeColumnForCard,
   onActivateNewCardForm,
@@ -109,12 +111,12 @@ export default function KanbanColumn({
   return (
     <div
       ref={sortableRef}
-      className={`flex min-h-25 w-72 shrink-0 flex-col gap-3 rounded-xl border p-4 shadow-sm transition-[transform,opacity,box-shadow,border-color,background-color] duration-200 ${isDragging
+      className={`flex min-h-24 w-72 shrink-0 flex-col gap-2.5 rounded-xl border p-3 shadow-sm transition-[transform,opacity,box-shadow,border-color,background-color] duration-200 ${isDragging
         ? "scale-[0.98] border-primary bg-primary-light opacity-35 shadow-none"
         : "scale-100 border-border bg-surface-muted opacity-100"
         } ${isColumnDropTarget ? "ring-2 ring-primary/60 ring-offset-2 ring-offset-surface" : ""} ${isDropping ? "animate-drop-settle" : ""}`}
     >
-      <div className="flex items-start justify-between border-b border-border pb-1 text-base font-semibold uppercase tracking-wide text-foreground">
+      <div className="flex items-start justify-between border-b border-border pb-2 text-sm font-semibold uppercase tracking-wide text-foreground">
         {isEditingColumn ? (
           <div className="mr-2 flex min-w-0 flex-1 flex-col gap-1 normal-case">
             <input
@@ -160,7 +162,7 @@ export default function KanbanColumn({
               title="Drag to reorder column"
               className="mr-1 shrink-0 touch-none cursor-grab rounded-md p-0.5 text-foreground-muted transition-colors hover:bg-primary-light hover:text-primary active:cursor-grabbing"
             >
-              <GripVertical className="size-4" />
+              <GripVertical className="size-3.5" />
             </button>
             <span className="min-w-0 break-words">{column.title}</span>
             <button
@@ -170,7 +172,7 @@ export default function KanbanColumn({
               onClick={() => onStartEditColumn(column)}
               className="ml-1 shrink-0 cursor-pointer text-primary hover:text-primary-hover"
             >
-              <Edit className="size-4" />
+              <Edit className="size-3.5" />
             </button>
           </div>
         )}
@@ -182,14 +184,14 @@ export default function KanbanColumn({
             className="shrink-0 cursor-pointer rounded p-1 text-foreground-muted hover:bg-danger-light hover:text-danger"
             onClick={() => onDeleteColumnClick(column.id)}
           >
-            <X className="size-4" />
+            <X className="size-3.5" />
           </button>
         )}
       </div>
 
       <div
         ref={cardDropRef}
-        className={`flex min-h-16 flex-col gap-3 rounded-lg transition-[background-color,box-shadow] duration-200 ${isCardDropTarget
+        className={`flex min-h-14 flex-col gap-2 rounded-lg transition-[background-color,box-shadow] duration-200 ${isCardDropTarget
           ? "bg-primary/8 shadow-[inset_0_0_0_2px_var(--primary-border)]"
           : ""
           }`}
@@ -205,6 +207,7 @@ export default function KanbanColumn({
             onEditChange={onEditCardTitleChange}
             onSaveEdit={onSaveCardTitle}
             onCancelEdit={onCancelEditCard}
+            onOpenDetails={onOpenCardDetails}
             onDeleteClick={onDeleteCardClick}
           />
         ))}
@@ -219,7 +222,7 @@ export default function KanbanColumn({
         ) : (
           <button
             type="button"
-            className="hover-lift mt-2 w-full cursor-pointer rounded-lg border border-border p-2 text-left text-sm text-foreground-muted transition hover:bg-surface-elevated hover:text-foreground"
+            className="hover-lift mt-1 w-full cursor-pointer rounded-lg border border-border px-2.5 py-2 text-left text-xs font-medium text-foreground-muted transition hover:bg-surface-elevated hover:text-foreground"
             onClick={() => onActivateNewCardForm(column.id)}
           >
             Add Card

@@ -48,9 +48,13 @@ model Column {
 }
 
 model Card {
-  id       String @id @default(cuid())
-  title    String
-  position Float
+  id          String    @id @default(cuid())
+  title       String
+  description String    @default("")
+  priority    String    @default("NONE")
+  labels      String    @default("")
+  dueDate     DateTime?
+  position    Float
 
   columnId String
   column   Column @relation(fields: [columnId], references: [id], onDelete: Cascade)

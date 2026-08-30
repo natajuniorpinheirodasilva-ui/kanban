@@ -62,7 +62,7 @@ const NewCardForm = ({ columns, initialColumnId = '', onCreate, onCancel }: Prop
 
     return (
         <form
-            className="font-sans flex flex-col w-72 h-auto self-start gap-2 bg-surface-elevated border border-border rounded-xl p-4 shadow-sm"
+            className="flex h-auto w-full flex-col gap-2 rounded-lg border border-border bg-surface-elevated p-3 font-sans shadow-sm"
             onSubmit={handleSubmit} >
             <input
                 className="border border-border rounded p-2 bg-input text-foreground outline-none focus:border-primary"
