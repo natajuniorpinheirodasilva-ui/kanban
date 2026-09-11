@@ -83,53 +83,53 @@ export default function KanbanCard({
       )}
 
       <div className="min-w-0 flex-1 py-0.5">
-      {isEditing ? (
-        <input
-          type="text"
-          className="w-full rounded border border-border bg-input px-2 py-1 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-          value={editingTitle}
-          onChange={(event) => onEditChange(event.target.value)}
-          onBlur={() => onSaveEdit(card.id)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") onSaveEdit(card.id)
-            if (event.key === "Escape") onCancelEdit()
-          }}
-          autoFocus
-        />
-      ) : (
-        <button
-          type="button"
-          className="block w-full cursor-pointer break-words text-left text-sm font-semibold leading-snug hover:text-primary"
-          title="Open card details"
-          onClick={() => onOpenDetails(card)}
-        >
-          {card.title}
-        </button>
-      )}
+        {isEditing ? (
+          <input
+            type="text"
+            className="w-full rounded border border-border bg-input px-2 py-1 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            value={editingTitle}
+            onChange={(event) => onEditChange(event.target.value)}
+            onBlur={() => onSaveEdit(card.id)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") onSaveEdit(card.id)
+              if (event.key === "Escape") onCancelEdit()
+            }}
+            autoFocus
+          />
+        ) : (
+          <button
+            type="button"
+            className="block w-full cursor-pointer break-words text-left text-sm font-semibold leading-snug hover:text-primary"
+            title="Open card details"
+            onClick={() => onOpenDetails(card)}
+          >
+            {card.title}
+          </button>
+        )}
 
-      {!isEditing && (card.priority !== "NONE" || labels.length > 0 || dueDate || card.description) && (
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px]">
-          {card.priority !== "NONE" && (
-            <span className="flex items-center gap-1 font-medium text-foreground-muted">
-              <span className={`size-1.5 rounded-full ${priorityStyles[card.priority] ?? priorityStyles.LOW}`} />
-              {card.priority.toLowerCase()}
-            </span>
-          )}
-          {labels.slice(0, 2).map((label) => (
-            <span key={label} className="max-w-20 truncate rounded bg-primary-light px-1.5 py-0.5 font-medium text-primary">
-              {label}
-            </span>
-          ))}
-          {labels.length > 2 && <span className="text-foreground-muted">+{labels.length - 2}</span>}
-          {card.description && <AlignLeft className="size-3.5 text-foreground-muted" aria-label="Has description" />}
-          {dueDate && (
-            <span className={`flex items-center gap-1 ${isOverdue ? "text-danger" : "text-foreground-muted"}`}>
-              <CalendarDays className="size-3.5" />
-              {dueDate.toLocaleDateString(undefined, { month: "short", day: "numeric" })}
-            </span>
-          )}
-        </div>
-      )}
+        {!isEditing && (card.priority !== "NONE" || labels.length > 0 || dueDate || card.description) && (
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px]">
+            {card.priority !== "NONE" && (
+              <span className="flex items-center gap-1 font-medium text-foreground-muted">
+                <span className={`size-1.5 rounded-full ${priorityStyles[card.priority] ?? priorityStyles.LOW}`} />
+                {card.priority.toLowerCase()}
+              </span>
+            )}
+            {labels.slice(0, 2).map((label) => (
+              <span key={label} className="max-w-20 truncate rounded bg-primary-light px-1.5 py-0.5 font-medium text-primary">
+                {label}
+              </span>
+            ))}
+            {labels.length > 2 && <span className="text-foreground-muted">+{labels.length - 2}</span>}
+            {card.description && <AlignLeft className="size-3.5 text-foreground-muted" aria-label="Has description" />}
+            {dueDate && (
+              <span className={`flex items-center gap-1 ${isOverdue ? "text-danger" : "text-foreground-muted"}`}>
+                <CalendarDays className="size-3.5" />
+                {dueDate.toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {!isEditing && (

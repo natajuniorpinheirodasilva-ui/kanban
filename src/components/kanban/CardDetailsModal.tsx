@@ -160,13 +160,13 @@ export default function CardDetailsModal({ card, onClose, onSave }: Props) {
             DESCRIPTION
             <textarea
               value={description}
-              maxLength={2000}
+              maxLength={200}
               rows={3}
               placeholder="Add a short description..."
               onChange={(event) => setDescription(event.target.value)}
               className="resize-none rounded-lg border border-border bg-input px-3 py-2 text-sm font-normal leading-relaxed text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
             />
-            <span className="self-end text-[10px] font-normal text-foreground-muted">{description.length}/2000</span>
+            <span className="self-end text-[10px] font-normal text-foreground-muted">{description.length}/200</span>
           </label>
 
           <div className="grid grid-cols-2 gap-3">

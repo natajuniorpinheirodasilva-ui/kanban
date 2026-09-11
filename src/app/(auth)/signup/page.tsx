@@ -103,20 +103,25 @@ export default function SignUp() {
     const [invalidEmail, setInvalidEmail] = useState<boolean>(false)
     const [weakPassword, setWeakPassword] = useState<boolean>(false)
 
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
     async function handleSignUp(event: React.SubmitEvent) {
         event.preventDefault()
 
+        setIsSubmitting(true)
         setSignUpError(false)
         setUsedEmail(false)
         setUnexpectedError(false)
 
         const emailIsInvalid = !isValidEmail(email)
         const passwordIsWeak = !isStrongPassword(password)
+
         setInvalidEmail(emailIsInvalid)
         setWeakPassword(passwordIsWeak)
 
         if (emailIsInvalid || passwordIsWeak || name.trim().length === 0) {
             setSignUpError(true)
+            setIsSubmitting(false)
             return
         }
 
@@ -136,16 +141,19 @@ export default function SignUp() {
 
             if (response.status === 400 || response.status === 401) {
                 setSignUpError(true)
+                setIsSubmitting(false)
                 return
             }
 
             if (response.status === 409) {
                 setUsedEmail(true)
+                setIsSubmitting(false)
                 return
             }
 
             if (!response.ok) {
                 setUnexpectedError(true)
+                setIsSubmitting(false)
                 return
             }
 
@@ -153,6 +161,9 @@ export default function SignUp() {
 
         } catch (error) {
             setUnexpectedError(true)
+            setIsSubmitting(false)
+        } finally {
+            setIsSubmitting(false)
         }
 
     }
@@ -472,8 +483,11 @@ export default function SignUp() {
                             </label>
                         </div>
 
-                        <Button type="submit">
-                            Sign up
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? "Signing up..." : "Sign up"}
                         </Button>
                     </div>
 

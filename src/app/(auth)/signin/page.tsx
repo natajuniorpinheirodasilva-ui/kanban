@@ -100,16 +100,21 @@ export default function SignIn() {
     const [unexpectedError, setUnexpectedError] = useState<boolean>(false)
     const [invalidEmail, setInvalidEmail] = useState<boolean>(false)
 
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
     async function handleSignIn(event: React.SubmitEvent) {
         event.preventDefault()
 
+        setIsSubmitting(true)
         setSignInError(false)
         setUnexpectedError(false)
+
         const emailIsInvalid = !isValidEmail(email)
         setInvalidEmail(emailIsInvalid)
 
         if (emailIsInvalid || password.length === 0) {
             setSignInError(true)
+            setIsSubmitting(false)
             return
         }
 
@@ -128,17 +133,22 @@ export default function SignIn() {
 
             if (response.status === 401 || response.status === 409) {
                 setSignInError(true)
+                setIsSubmitting(false)
                 return
             }
 
             if (!response.ok) {
                 setUnexpectedError(true)
+                setIsSubmitting(false)
                 return
             }
 
             router.push("/board")
         } catch (error) {
             setUnexpectedError(true)
+            setIsSubmitting(false)
+        } finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -443,8 +453,9 @@ export default function SignIn() {
 
                         <Button
                             type="submit"
+                            disabled={isSubmitting}
                         >
-                            Sign in
+                            {isSubmitting ? "Signing in..." : "Sign in"}
                         </Button>
                     </div>
 

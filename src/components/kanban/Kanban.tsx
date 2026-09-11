@@ -1,16 +1,17 @@
 'use client'
 
-import { Card, Column } from "@/generated/prisma/client"
-import { BoardWithColumnsAndCards } from "@/lib/board"
-import NewColumnForm from "./NewColumnForm"
 import ConfirmDialog from "@/components/ui/ConfirmDialog"
+import Search from "@/components/ui/Search"
+import NewColumnForm from "./NewColumnForm"
 import KanbanColumn from "./KanbanColumn"
 import WorkspaceSwitcher from "./WorkspaceSwitcher"
 import CardDetailsModal from "./CardDetailsModal"
+import { Card, Column } from "@/generated/prisma/client"
+import { BoardWithColumnsAndCards } from "@/lib/board"
 import { useState } from "react"
 import { DragDropProvider, DragOverlay, type DragEndEvent } from "@dnd-kit/react"
 import { isSortable } from "@dnd-kit/react/sortable"
-import { Plus, X } from "lucide-react"
+import { Plus, SearchIcon, X } from "lucide-react"
 
 type Props = {
     board: BoardWithColumnsAndCards;
@@ -19,6 +20,10 @@ type Props = {
         title: string;
     }[];
 }
+
+type PriorityFilter = "ALL" | "NONE" | "LOW" | "MEDIUM" | "HIGH"
+
+type DueFilter = "ALL" | "OVERDUE" | "TODAY" | "UPCOMING" | "NO_DATE"
 
 function Kanban({ board, workspaces }: Props) {
     const [cards, setCards] = useState<Card[]>(board.columns.flatMap((column) => column.cards))
@@ -45,6 +50,60 @@ function Kanban({ board, workspaces }: Props) {
     const [selectedCardId, setSelectedCardId] = useState<string | null>(null)
 
     const selectedCard = cards.find((card) => card.id === selectedCardId) ?? null
+
+    const [search, setSearch] = useState<string>("")
+    const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>("ALL")
+    const [dueFilter, setDueFilter] = useState<DueFilter>("ALL")
+    const [searchOpen, setSearchOpen] = useState<boolean>(false)
+
+    function checkDueDate(dueDate: Date | null, filter: DueFilter): boolean {
+        if (filter === "ALL") return true
+        if (!dueDate) return filter === "NO_DATE"
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+
+        const date = new Date(dueDate.getTime())
+        date.setHours(0, 0, 0, 0)
+
+        if (filter === "OVERDUE") return date < today
+        if (filter === "TODAY") return date.getTime() === today.getTime()
+        if (filter === "UPCOMING") return date > today
+
+        return false
+    }
+
+    function filterCards(
+        cards: Card[],
+        search: string,
+        priority: PriorityFilter,
+        due: DueFilter
+    ) {
+        const term = search.trim().toLowerCase()
+
+        return cards.filter((card) => {
+            const matchesSearch =
+                card.title.toLowerCase().includes(term) ||
+                card.description.toLowerCase().includes(term)
+
+            const matchesPriority =
+                priority === "ALL" ||
+                card.priority === priority
+
+            const matchesDue =
+                due === "ALL" ||
+                checkDueDate(card.dueDate, due)
+
+            return matchesSearch && matchesPriority && matchesDue
+        })
+    }
+
+    const filteredCards = filterCards(
+        cards,
+        search,
+        priorityFilter,
+        dueFilter
+    )
 
     function handleCardCreate(newCard: Card) {
         setCards([...cards, newCard])
@@ -327,20 +386,50 @@ function Kanban({ board, workspaces }: Props) {
                         activeWorkspaceId={board.id}
                     />
 
-                    <button
-                        type="button"
-                        disabled={newColumnButton}
-                        onClick={() => setNewColumnButton(true)}
-                        className="hover-lift flex h-9 cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-white shadow-sm hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                        <Plus className="size-4" />
-                        New column
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <div
+                            className={`relative h-9 overflow-hidden transition-[width] duration-300 ease-out ${searchOpen ? "w-56" : "w-9"}`}
+                            onBlur={(event) => {
+                                if (!event.currentTarget.contains(event.relatedTarget)) {
+                                    setSearchOpen(false)
+                                }
+                            }}
+                        >
+                            <div className={`absolute inset-0 transition-all duration-200 ${searchOpen ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0"}`}>
+                                <Search
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    type="text"
+                                    placeholder="Search cards"
+                                    isOpen={searchOpen}
+                                />
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => setSearchOpen(true)}
+                                className={`absolute inset-y-0 left-0 flex size-9 cursor-pointer items-center justify-center rounded-full border border-border bg-surface text-muted transition-all duration-200 hover:border-primary hover:text-primary ${searchOpen ? "pointer-events-none scale-75 opacity-0" : "scale-100 opacity-100"}`}
+                                aria-label="Open card search"
+                            >
+                                <SearchIcon className="pointer-events-none size-4" />
+                            </button>
+                        </div>
+
+                        <button
+                            type="button"
+                            disabled={newColumnButton}
+                            onClick={() => setNewColumnButton(true)}
+                            className="hover-lift flex h-9 cursor-pointer items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-white shadow-sm hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            <Plus className="size-4" />
+                            New column
+                        </button>
+                    </div>
                 </div>
 
                 <div className="flex items-start justify-start gap-4 overflow-x-auto p-4">
                     {columns.map((column, columnIndex) => {
-                        const columnCards = cards
+                        const columnCards = filteredCards
                             .filter((card) => card.columnId === column.id)
                             .sort((first, second) => first.position - second.position)
 
