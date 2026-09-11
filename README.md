@@ -1,79 +1,47 @@
 # Kanban
 
-A full-stack Kanban application built with Next.js, React, TypeScript, Prisma, and PostgreSQL.
+A full-stack Kanban application for organizing tasks across personal workspaces. It combines authenticated server-side operations with a responsive board, persistent drag-and-drop ordering, task metadata, search, filters, and light/dark themes.
 
-The project provides authenticated, user-specific workspaces where columns and cards can be created, edited, deleted, and reordered through a modern drag-and-drop interface.
+## Live Demo
 
-## Preview
+[Open the deployed application](https://kanban-mu-woad.vercel.app)
 
-![Board](public/board1.png)
+This is an educational and portfolio project. Use test credentials rather than personal passwords.
 
-## Main Features
+## Features
 
-- Account creation, sign-in, and logout
-- Password hashing with bcryptjs
-- Database-backed sessions using HTTP-only cookies
-- Optional persistent authentication with **Remember me**
-- Protected routes and ownership validation on every board operation
-- Multiple workspaces with dedicated URLs
-- Workspace creation, switching, inline renaming, and deletion
+- Account creation, sign-in, persistent sessions, and logout
+- Email validation and password-strength requirements
+- HTTP-only session cookies with an optional **Remember me** duration
+- Protected routes and resource ownership checks
+- Authentication rate limiting in the deployed environment
+- Multiple user-specific workspaces with dedicated URLs
+- Workspace creation, switching, inline renaming, and confirmed deletion
 - Protection against deleting the user's final workspace
-- Column creation, inline editing, deletion, and reordering
-- Card creation, inline editing, deletion, and precise reordering
-- Card movement within and between columns using dnd-kit
-- Card details with descriptions, priorities, labels, and due dates
-- Visual insertion indicator above or below the destination card
-- Confirmation dialogs and contextual error/loading feedback
+- Column creation, inline editing, deletion, and drag-and-drop reordering
+- Card creation, inline editing, deletion, and movement between columns
+- Precise insertion feedback when positioning cards above or below another card
+- Card details with description, priority, labels, and due date
+- Card search by title or description
+- Filtering by priority and due-date status
+- Loading, confirmation, empty, and error states
 - Light and dark themes with system preference detection
-- Responsive interface with reusable colors and animations
 
-## Authentication
+## How It Works
 
-Passwords are hashed before being stored. After a successful sign-up or sign-in, the server creates a database session and returns its random token in an HTTP-only cookie.
+Each account starts with a workspace containing **To Do**, **In Progress**, and **Done** columns. Users can add more workspaces and manage columns and cards directly from the board.
 
-When **Remember me** is enabled, authentication can persist for up to 30 days. Otherwise, the cookie lasts only for the current browser session. Protected operations validate the token, expiration date, user, and resource ownership before accessing or changing data.
+Drag-and-drop interactions are powered by dnd-kit. Card and column positions are recalculated on the client and persisted through batch API updates, including moves between columns.
 
-![Signup](public/signup.png)
+Card details provide additional context without overcrowding the board. Search and filters can narrow visible cards by text, priority, or due-date status.
 
-![Signin](public/signin.png)
+## Authentication and Security
 
-## Workspace Management
+Passwords are hashed with bcryptjs before storage. On successful sign-up or sign-in, the server creates a database session and sends its random token through an HTTP-only cookie.
 
-Every new account starts with a workspace containing three default columns: **To Do**, **In Progress**, and **Done**.
+With **Remember me**, the session can persist for up to 30 days. Otherwise, the authentication cookie lasts for the current browser session. Protected endpoints validate the session, expiration date, authenticated user, and ownership of the requested resource.
 
-Users can create additional workspaces, switch between them, rename their titles inline, and delete them after confirmation. When a workspace is removed, the application redirects to another available workspace. The final workspace cannot be deleted.
-
-![Workspace](public/workspace.png)
-
-![Workspace Edit](public/workspace-edit.png)
-
-![Workspace Delete](public/workspace-delete.png)
-
-## Board Management
-
-Columns and cards are managed directly from the board. Titles can be edited inline, with save, cancel, loading, and error states where appropriate. Destructive actions require confirmation.
-
-The board uses dnd-kit to reorder columns and to position cards precisely within the same column or across different columns. A red insertion line shows whether the card will be placed above or below the current target. Every successful movement is persisted in the database.
-
-Deleting a column also removes its cards through cascading database relations.
-
-![Board Edit](public/board-edit.png)
-
-![Drag Card](public/drag-card.png)
-
-![Drag Column](public/drag-column.png)
-
-![Drop](public/drop.png)
-
-## User Menu and Themes
-
-The user menu displays the current user's name and provides theme and logout controls. The selected theme is stored locally, while the system preference is used when no manual selection exists.
-
-Logging out invalidates the database session, removes the authentication cookie, and redirects the user to the authentication area.
-
-![User Menu](public/user-menu.png)
-
-![Light Board](public/light-board.png)
+Sign-up requires a valid email and a password between 8 and 72 characters containing lowercase and uppercase letters, a number, and a special character. The production deployment also limits requests to authentication routes by IP address.
 
 ## Tech Stack
 
@@ -86,6 +54,7 @@ Logging out invalidates the database session, removes the authentication cookie,
 - PostgreSQL
 - bcryptjs
 - Lucide React
+- Vercel
 
 ## API Routes
 
@@ -109,91 +78,54 @@ PATCH   /api/cards/[id]
 DELETE  /api/cards/[id]
 ```
 
-The collection-level `PATCH` routes persist reordered columns and cards in batches. All board-related endpoints require a valid session and verify that the requested resources belong to the authenticated user.
+The collection-level `PATCH` routes persist reordered columns and cards in batches. All board-related endpoints require a valid session and verify resource ownership.
 
-## Database Structure
+## Data Model
 
 ```text
 User
-├── Session
-└── Board
-    └── Column
-        └── Card
+|-- Session
+`-- Board
+    `-- Column
+        `-- Card
 ```
 
-Boards belong to users, columns belong to boards, and cards belong to columns. Cascading relations keep associated data consistent when a parent resource is deleted.
-
-Columns and cards use a numeric `position` field to preserve their order.
+Boards belong to users, columns belong to boards, and cards belong to columns. Cascading relations remove dependent records when a parent is deleted. Numeric position fields preserve the order of columns and cards.
 
 ## Project Structure
 
 ```text
 src/
-├── app/
-│   ├── (auth)/
-│   ├── api/
-│   │   ├── auth/
-│   │   ├── boards/
-│   │   ├── cards/
-│   │   └── columns/
-│   ├── board/
-│   ├── globals.css
-│   └── layout.tsx
-├── components/
-│   ├── auth/
-│   ├── kanban/
-│   └── ui/
-├── generated/
-│   └── prisma/
-└── lib/
+|-- app/
+|   |-- (auth)/
+|   |-- api/
+|   |   |-- auth/
+|   |   |-- boards/
+|   |   |-- cards/
+|   |   `-- columns/
+|   |-- board/
+|   |-- globals.css
+|   `-- layout.tsx
+|-- components/
+|   |-- auth/
+|   |-- kanban/
+|   `-- ui/
+|-- generated/
+|   `-- prisma/
+`-- lib/
 
 prisma/
-├── migrations/
-└── schema.prisma
+|-- migrations/
+`-- schema.prisma
 ```
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js
-- npm
-
-### Installation
-
-```bash
-git clone https://github.com/natajuniorpinheirodasilva-ui/kanban.git
-cd kanban
-npm install
-```
-
-Create a `.env` file in the project root:
-
-```env
-DATABASE_URL="postgres://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
-```
-
-Generate the Prisma client, apply the migrations, and run the development server:
-
-```bash
-npx prisma generate
-npx prisma migrate dev
-npm run dev
-```
-
-Open `http://localhost:3000/signup` to create an account.
-
-## Current Limitations
-
-- Position values are not automatically rebalanced after extensive reordering.
-- Expired sessions are validated but are not automatically removed from the database.
 
 ## Roadmap
 
+- Add password recovery
 - Add profile and account settings
-- Improve keyboard accessibility for board reordering
-- Deploy the application to Vercel
+- Improve keyboard accessibility for drag-and-drop
+- Add automated API and interface tests
 
 ## License
 
-This project was created for educational and portfolio purposes.
+Created for educational and portfolio purposes.
