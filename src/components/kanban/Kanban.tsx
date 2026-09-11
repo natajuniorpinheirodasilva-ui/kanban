@@ -1,7 +1,7 @@
 'use client'
 
 import ConfirmDialog from "@/components/ui/ConfirmDialog"
-import Search from "@/components/ui/Search"
+import SearchBar from "@/components/ui/SearchBar"
 import NewColumnForm from "./NewColumnForm"
 import KanbanColumn from "./KanbanColumn"
 import WorkspaceSwitcher from "./WorkspaceSwitcher"
@@ -11,7 +11,7 @@ import { BoardWithColumnsAndCards } from "@/lib/board"
 import { useState } from "react"
 import { DragDropProvider, DragOverlay, type DragEndEvent } from "@dnd-kit/react"
 import { isSortable } from "@dnd-kit/react/sortable"
-import { Plus, SearchIcon, X } from "lucide-react"
+import { Plus, SearchIcon, X, FunnelIcon } from "lucide-react"
 
 type Props = {
     board: BoardWithColumnsAndCards;
@@ -24,6 +24,22 @@ type Props = {
 type PriorityFilter = "ALL" | "NONE" | "LOW" | "MEDIUM" | "HIGH"
 
 type DueFilter = "ALL" | "OVERDUE" | "TODAY" | "UPCOMING" | "NO_DATE"
+
+const priorityOptions: { value: PriorityFilter; label: string }[] = [
+    { value: "ALL", label: "All" },
+    { value: "NONE", label: "No priority" },
+    { value: "LOW", label: "Low" },
+    { value: "MEDIUM", label: "Medium" },
+    { value: "HIGH", label: "High" },
+]
+
+const dueOptions: { value: DueFilter; label: string }[] = [
+    { value: "ALL", label: "Any date" },
+    { value: "OVERDUE", label: "Overdue" },
+    { value: "TODAY", label: "Today" },
+    { value: "UPCOMING", label: "Upcoming" },
+    { value: "NO_DATE", label: "No date" },
+]
 
 function Kanban({ board, workspaces }: Props) {
     const [cards, setCards] = useState<Card[]>(board.columns.flatMap((column) => column.cards))
@@ -55,6 +71,7 @@ function Kanban({ board, workspaces }: Props) {
     const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>("ALL")
     const [dueFilter, setDueFilter] = useState<DueFilter>("ALL")
     const [searchOpen, setSearchOpen] = useState<boolean>(false)
+    const [filterOpen, setFilterOpen] = useState<boolean>(false)
 
     function checkDueDate(dueDate: Date | null, filter: DueFilter): boolean {
         if (filter === "ALL") return true
@@ -104,6 +121,11 @@ function Kanban({ board, workspaces }: Props) {
         priorityFilter,
         dueFilter
     )
+
+    const hasActiveFilters =
+        search.trim() !== "" ||
+        priorityFilter !== "ALL" ||
+        dueFilter !== "ALL"
 
     function handleCardCreate(newCard: Card) {
         setCards([...cards, newCard])
@@ -396,7 +418,7 @@ function Kanban({ board, workspaces }: Props) {
                             }}
                         >
                             <div className={`absolute inset-0 transition-all duration-200 ${searchOpen ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0"}`}>
-                                <Search
+                                <SearchBar
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                     type="text"
@@ -415,6 +437,81 @@ function Kanban({ board, workspaces }: Props) {
                             </button>
                         </div>
 
+                        <div
+                            className="relative"
+                            onBlur={(event) => {
+                                if (!event.currentTarget.contains(event.relatedTarget)) {
+                                    setFilterOpen(false)
+                                }
+                            }}
+                        >
+                            <button
+                                type="button"
+                                onClick={() => setFilterOpen((current) => !current)}
+                                aria-label="Filter cards"
+                                aria-expanded={filterOpen}
+                                className={`relative flex size-9 cursor-pointer items-center justify-center rounded-full border bg-surface transition-colors hover:border-primary hover:text-primary ${filterOpen || priorityFilter !== "ALL" || dueFilter !== "ALL" ? "border-primary text-primary" : "border-border text-muted"}`}
+                            >
+                                <FunnelIcon className="size-4" />
+                                {(priorityFilter !== "ALL" || dueFilter !== "ALL") && (
+                                    <span className="absolute right-0.5 top-0.5 size-1.5 rounded-full bg-primary" />
+                                )}
+                            </button>
+
+                            {filterOpen && (
+                                <div className="absolute right-0 top-full z-30 mt-2 w-64 rounded-xl border border-border bg-surface p-3 shadow-xl">
+                                    <div className="mb-3 flex items-center justify-between">
+                                        <p className="text-sm font-semibold text-foreground">Filters</p>
+                                        {(priorityFilter !== "ALL" || dueFilter !== "ALL") && (
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setPriorityFilter("ALL")
+                                                    setDueFilter("ALL")
+                                                }}
+                                                className="cursor-pointer text-xs font-medium text-primary transition-colors hover:text-primary-hover"
+                                            >
+                                                Clear
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">Priority</p>
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {priorityOptions.map((option) => (
+                                                <button
+                                                    key={option.value}
+                                                    type="button"
+                                                    onClick={() => setPriorityFilter(option.value)}
+                                                    className={`cursor-pointer rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors ${priorityFilter === option.value ? "border-primary bg-primary text-white" : "border-border bg-background text-muted hover:border-primary hover:text-foreground"}`}
+                                                >
+                                                    {option.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 border-t border-border pt-3">
+                                        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">Due date</p>
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {dueOptions.map((option) => (
+                                                <button
+                                                    key={option.value}
+                                                    type="button"
+                                                    onClick={() => setDueFilter(option.value)}
+                                                    className={`cursor-pointer rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors ${dueFilter === option.value ? "border-primary bg-primary text-white" : "border-border bg-background text-muted hover:border-primary hover:text-foreground"}`}
+                                                >
+                                                    {option.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+
                         <button
                             type="button"
                             disabled={newColumnButton}
@@ -428,7 +525,12 @@ function Kanban({ board, workspaces }: Props) {
                 </div>
 
                 <div className="flex items-start justify-start gap-4 overflow-x-auto p-4">
-                    {columns.map((column, columnIndex) => {
+                    {hasActiveFilters && filteredCards.length === 0 ? (
+                        <div className="flex min-h-48 w-full flex-col items-center justify-center text-center">
+                            <p className="text-sm font-semibold text-foreground">No cards found</p>
+                            <p className="mt-1 text-xs text-muted">Try changing or clearing your filters.</p>
+                        </div>
+                    ) : columns.map((column, columnIndex) => {
                         const columnCards = filteredCards
                             .filter((card) => card.columnId === column.id)
                             .sort((first, second) => first.position - second.position)

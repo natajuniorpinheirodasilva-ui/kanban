@@ -1,5 +1,3 @@
-'use client'
-
 import { Card, Column } from "@/generated/prisma/client"
 import KanbanCard from "./KanbanCard"
 import NewCardForm from "@/components/kanban/NewCardForm"

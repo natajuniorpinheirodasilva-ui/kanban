@@ -1,5 +1,3 @@
-'use client'
-
 import { SearchIcon } from "lucide-react"
 import { useEffect, useRef } from "react"
 
@@ -11,7 +9,7 @@ type Props = {
     isOpen: boolean;
 }
 
-export default function Search({ type, value, placeholder, onChange, isOpen }: Props) {
+export default function SearchBar({ type, value, placeholder, onChange, isOpen }: Props) {
     const inputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
